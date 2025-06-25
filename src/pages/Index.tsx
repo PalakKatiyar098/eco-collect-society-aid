@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Recycle, Syringe, Leaf, Users, Shield, Phone } from 'lucide-react';
+import { Recycle, Syringe, Leaf, Users, Shield, Phone, Award, CheckCircle } from 'lucide-react';
 import EWasteBooking from '@/components/EWasteBooking';
 import BiomedicalBooking from '@/components/BiomedicalBooking';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ImpactStats from '@/components/ImpactStats';
 import TrustedPartners from '@/components/TrustedPartners';
+import ProcessSteps from '@/components/ProcessSteps';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<'home' | 'ewaste' | 'biomedical' | 'about' | 'education'>('home');
@@ -51,6 +52,12 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
           and a deep understanding of all types of waste management, we offer customised solutions that address 
           the specific needs of our clients.
         </p>
+        <div className="bg-neutral-50 rounded-xl p-6 max-w-2xl mx-auto">
+          <p className="text-gray-600 mb-4">Not sure which category your waste falls into?</p>
+          <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
+            Learn About Waste Types
+          </Button>
+        </div>
       </div>
 
       {/* Service Selection Cards */}
@@ -92,8 +99,150 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
         </Card>
       </div>
 
-      {/* Impact Stats */}
-      <ImpactStats />
+      {/* Process Steps */}
+      <ProcessSteps />
+
+      {/* Education Section */}
+      <div className="bg-neutral-50 rounded-xl p-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Learn About Responsible Waste Disposal</h2>
+          <p className="text-gray-600 max-w-3xl mx-auto">
+            Understanding proper waste disposal is crucial for environmental protection and 
+            community health. Learn about the different types of waste and why proper handling matters.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="bg-white rounded-lg p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <Recycle className="w-4 h-4 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900">What is E-Waste?</h3>
+            </div>
+            <p className="text-gray-600 mb-4">
+              Electronic waste (e-waste) refers to discarded electrical or electronic devices. 
+              These items contain valuable materials that can be recycled and hazardous substances 
+              that need proper handling.
+            </p>
+            <div className="space-y-2">
+              <h4 className="font-medium text-gray-900">Common E-Waste Items:</h4>
+              <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
+                <li>Mobile phones and tablets</li>
+                <li>Computers and laptops</li>
+                <li>TVs and monitors</li>
+                <li>Kitchen appliances</li>
+                <li>Batteries and chargers</li>
+                <li>Printers and scanners</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                <Syringe className="w-4 h-4 text-orange-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900">Why Proper Disposal Matters</h3>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Environmental Impact:</h4>
+                <p className="text-sm text-gray-600">
+                  E-waste contains toxic materials like lead, mercury, and cadmium that can 
+                  contaminate soil and water if not properly disposed of.
+                </p>
+              </div>
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Resource Recovery:</h4>
+                <p className="text-sm text-gray-600">
+                  Proper recycling recovers valuable materials like gold, silver, and rare earth 
+                  elements, reducing the need for mining.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 bg-gradient-to-r from-green-100 to-blue-100 p-6 rounded-xl">
+          <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Did You Know?</h3>
+          <div className="grid md:grid-cols-3 gap-6 text-center">
+            <div>
+              <div className="text-2xl font-bold text-primary">95%</div>
+              <p className="text-sm text-gray-700">of e-waste materials can be recycled</p>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-orange-500">1 ton</div>
+              <p className="text-sm text-gray-700">of e-waste contains more gold than 17 tons of ore</p>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-blue-600">50M</div>
+              <p className="text-sm text-gray-700">tons of e-waste generated globally each year</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* About Section */}
+      <div className="bg-white">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">About EcoCollect</h2>
+          <p className="text-gray-600 max-w-3xl mx-auto">
+            We're committed to making waste disposal convenient, safe, and environmentally 
+            responsible for residential societies across India.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-12 items-center mb-12">
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-900">Our Mission</h3>
+            <p className="text-gray-600">
+              EcoCollect was founded with a simple yet powerful mission: to bridge the gap 
+              between residential communities and proper waste management services. We 
+              believe that every household should have access to safe, convenient, and 
+              environmentally responsible waste disposal options.
+            </p>
+            
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
+                  <Users className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Community First</h4>
+                  <p className="text-sm text-gray-600">We prioritize the health and convenience of residential communities</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
+                  <Shield className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Safety & Compliance</h4>
+                  <p className="text-sm text-gray-600">All operations follow strict safety protocols and regulatory standards</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
+                  <Leaf className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-900">Environmental Impact</h4>
+                  <p className="text-sm text-gray-600">Committed to reducing environmental footprint through proper recycling</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-neutral-50 rounded-xl p-8">
+            <ImpactStats />
+          </div>
+        </div>
+
+        <TrustedPartners />
+      </div>
 
       {/* Features */}
       <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">

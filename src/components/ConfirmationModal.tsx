@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Edit3, MapPin, Phone, Mail } from 'lucide-react';
@@ -27,6 +27,9 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }: Confirmat
               Edit
             </Button>
           </DialogTitle>
+          <DialogDescription>
+            Please review your booking details before confirming
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">

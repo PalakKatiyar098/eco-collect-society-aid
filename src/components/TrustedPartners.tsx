@@ -1,75 +1,97 @@
 
 import React from 'react';
-import { Building } from 'lucide-react';
+import { Building, Users, Award, CheckCircle } from 'lucide-react';
 
 const TrustedPartners = () => {
   const partners = [
     {
-      name: 'Waste Management Corp',
-      type: 'Processing Partner',
+      name: 'Green Earth Recycling',
+      logo: '🌱',
+      description: 'Certified e-waste processing facility'
     },
     {
-      name: 'Green Recycling Ltd',
-      type: 'E-Waste Specialist',
+      name: 'EcoSafe Medical',
+      logo: '🏥',
+      description: 'Licensed biomedical waste treatment'
     },
     {
-      name: 'BioSafe Solutions',
-      type: 'Biomedical Expert',
+      name: 'City Municipal Corp',
+      logo: '🏛️',
+      description: 'Government partnership program'
     },
     {
-      name: 'EcoLogistics',
-      type: 'Transportation',
-    },
+      name: 'Tech Recyclers Ltd',
+      logo: '💻',
+      description: 'Electronics refurbishment experts'
+    }
   ];
 
   const certifications = [
     {
-      name: 'Pollution Control Board',
-      description: 'Authorized by State Pollution Control Board for waste handling',
-    },
-    {
       name: 'ISO 14001',
-      description: 'Environmental management system certification',
+      icon: Award,
+      description: 'Environmental Management'
     },
     {
-      name: 'Biomedical License',
-      description: 'Licensed for biomedical waste collection and transport',
+      name: 'CPCB Authorized',
+      icon: CheckCircle,
+      description: 'Pollution Control Board'
     },
+    {
+      name: 'OSHA Compliant',
+      icon: CheckCircle,
+      description: 'Safety Standards'
+    },
+    {
+      name: 'Zero Landfill',
+      icon: Award,
+      description: 'Sustainable Processing'
+    }
   ];
 
   return (
-    <div className="space-y-12">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Our Trusted Partners</h2>
-        <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
-          We work with certified waste management companies, recycling facilities, and logistics partners 
-          to ensure your waste is handled responsibly from pickup to final processing.
-        </p>
-        <div className="grid md:grid-cols-4 gap-6">
-          {partners.map((partner, index) => (
-            <div key={index} className="bg-white border border-neutral-200 rounded-lg p-6 text-center">
-              <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Building className="w-6 h-6 text-neutral-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">{partner.name}</h3>
-              <p className="text-sm text-gray-600">{partner.type}</p>
-            </div>
-          ))}
+    <div className="bg-white py-16">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Trusted Partners & Certifications</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            We work with certified partners to ensure your waste is processed safely and responsibly
+          </p>
         </div>
-      </div>
 
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Certifications & Compliance</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {certifications.map((cert, index) => (
-            <div key={index} className="bg-white border border-neutral-200 rounded-lg p-6 text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">{cert.name}</h3>
-              <p className="text-sm text-gray-600">{cert.description}</p>
+        <div className="grid md:grid-cols-2 gap-12">
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-6">Our Partners</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {partners.map((partner, index) => (
+                <div key={index} className="bg-neutral-50 rounded-lg p-4 text-center">
+                  <div className="text-2xl mb-2">{partner.logo}</div>
+                  <h4 className="font-medium text-gray-900 mb-1">{partner.name}</h4>
+                  <p className="text-xs text-gray-600">{partner.description}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-6">Certifications</h3>
+            <div className="space-y-4">
+              {certifications.map((cert, index) => {
+                const IconComponent = cert.icon;
+                return (
+                  <div key={index} className="flex items-center gap-3 p-3 bg-neutral-50 rounded-lg">
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                      <IconComponent className="w-4 h-4 text-primary" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">{cert.name}</h4>
+                      <p className="text-sm text-gray-600">{cert.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -5,13 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Calendar } from 'lucide-react';
-import { Calendar as CalendarComponent } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-
+import { Calendar as CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import SuccessModal from './SuccessModal';
 import ProcessSteps from './ProcessSteps';
 import QuickInfo from './QuickInfo';
@@ -21,23 +19,16 @@ const EWasteBooking = ({ onBack }: { onBack: () => void }) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [society, setSociety] = useState('');
-  const [address, setAddress] = useState('');
-  const [ewasteType, setEwasteType] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [terms, setTerms] = useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [city, setCity] = useState('');
+  const [wasteType, setWasteType] = useState('');
+  const [isUrgent, setIsUrgent] = useState(false);
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [successModalOpen, setSuccessModalOpen] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    setIsSubmitting(false);
+    // Handle form submission logic here
+    console.log('Form submitted', { name, email, phone, society, city, wasteType, isUrgent });
     setSuccessModalOpen(true);
   };
 
@@ -47,14 +38,13 @@ const EWasteBooking = ({ onBack }: { onBack: () => void }) => {
         <Button variant="ghost" onClick={onBack} className="mb-4">
           ← Back
         </Button>
-        
+
         <ProcessSteps type="ewaste" />
-        
+
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Book Your Waste Pickup</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Book Your E-Waste Pickup</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Schedule a convenient pickup time for your waste. Our certified team will 
-            handle everything safely and responsibly.
+            Schedule a convenient pickup time for your electronic waste. We ensure safe and responsible recycling.
           </p>
         </div>
 
@@ -82,7 +72,6 @@ const EWasteBooking = ({ onBack }: { onBack: () => void }) => {
                       className="mt-1"
                     />
                   </div>
-
                   <div>
                     <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
                       Email Address
@@ -97,7 +86,6 @@ const EWasteBooking = ({ onBack }: { onBack: () => void }) => {
                       className="mt-1"
                     />
                   </div>
-
                   <div>
                     <Label htmlFor="phone" className="block text-sm font-medium text-gray-700">
                       Phone Number
@@ -112,7 +100,6 @@ const EWasteBooking = ({ onBack }: { onBack: () => void }) => {
                       className="mt-1"
                     />
                   </div>
-
                   <div>
                     <Label htmlFor="society" className="block text-sm font-medium text-gray-700">
                       Society Name
@@ -122,99 +109,82 @@ const EWasteBooking = ({ onBack }: { onBack: () => void }) => {
                       id="society"
                       value={society}
                       onChange={(e) => setSociety(e.target.value)}
-                      placeholder="Your Society Name"
+                      placeholder="Your Society/Apartment Name"
                       required
                       className="mt-1"
                     />
                   </div>
-
                   <div>
-                    <Label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                      Full Address
+                    <Label htmlFor="city" className="block text-sm font-medium text-gray-700">
+                      City
                     </Label>
                     <Input
                       type="text"
-                      id="address"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      placeholder="Flat no, Building, Street, Area"
+                      id="city"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      placeholder="Your City"
                       required
                       className="mt-1"
                     />
                   </div>
-
                   <div>
-                    <Label htmlFor="ewasteType" className="block text-sm font-medium text-gray-700">
+                    <Label htmlFor="wasteType" className="block text-sm font-medium text-gray-700">
                       Type of E-Waste
                     </Label>
-                    <Select value={ewasteType} onValueChange={setEwasteType}>
+                    <Select value={wasteType} onValueChange={setWasteType}>
                       <SelectTrigger className="mt-1 w-full">
-                        <SelectValue placeholder="Select E-Waste Type" />
+                        <SelectValue placeholder="Select Waste Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="electronics">Electronics (TV, Fridge, etc.)</SelectItem>
-                        <SelectItem value="it_equipment">IT Equipment (Computers, Laptops)</SelectItem>
-                        <SelectItem value="small_appliances">Small Appliances (Microwave, Iron)</SelectItem>
-                        <SelectItem value="cables_batteries">Cables and Batteries</SelectItem>
+                        <SelectItem value="computers">Computers & Laptops</SelectItem>
+                        <SelectItem value="phones">Mobile Phones</SelectItem>
+                        <SelectItem value="appliances">Home Appliances</SelectItem>
+                        <SelectItem value="other">Other Electronic Waste</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
-
-                  <div>
-                    <Label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
-                      Approximate Quantity (in kgs)
-                    </Label>
-                    <Input
-                      type="number"
-                      id="quantity"
-                      value={quantity}
-                      onChange={(e) => setQuantity(e.target.value)}
-                      placeholder="Enter Quantity"
-                      required
-                      className="mt-1"
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="urgent"
+                      checked={isUrgent}
+                      onCheckedChange={(checked) => setIsUrgent(checked === true)}
                     />
+                    <Label htmlFor="urgent" className="text-sm font-medium">
+                      Urgent pickup required (within 24 hours)
+                    </Label>
                   </div>
-
                   <div>
-                    <Label className="block text-sm font-medium text-gray-700">
-                      Pickup Date
+                    <Label htmlFor="date" className="block text-sm font-medium text-gray-700">
+                      Preferred Pickup Date
                     </Label>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "w-full justify-start text-left font-normal",
+                            "w-full justify-start text-left font-normal mt-1",
                             !date && "text-muted-foreground"
                           )}
                         >
-                          <Calendar className="mr-2 h-4 w-4" />
+                          <CalendarIcon className="mr-2 h-4 w-4" />
                           {date ? format(date, "PPP") : <span>Pick a date</span>}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
+                      <PopoverContent className="w-auto p-0" align="center" side="bottom">
                         <CalendarComponent
                           mode="single"
                           selected={date}
                           onSelect={setDate}
-                          disabled={(date) =>
-                            date < new Date()
-                          }
+                          disabled={date => date < new Date()}
                           initialFocus
+                          className="p-3 pointer-events-auto"
                         />
                       </PopoverContent>
                     </Popover>
                   </div>
-
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="terms" checked={terms} onCheckedChange={setTerms} />
-                    <Label htmlFor="terms" className="text-sm font-medium text-gray-700">
-                      I agree to the terms and conditions
-                    </Label>
-                  </div>
-
-                  <Button type="submit" disabled={isSubmitting} className="w-full">
-                    {isSubmitting ? 'Submitting...' : 'Book E-Waste Pickup'}
+                  <Button type="submit" className="w-full">
+                    Book E-Waste Pickup
                   </Button>
                 </form>
               </CardContent>
@@ -227,7 +197,11 @@ const EWasteBooking = ({ onBack }: { onBack: () => void }) => {
         </div>
       </div>
 
-      <SuccessModal isOpen={successModalOpen} onClose={() => setSuccessModalOpen(false)} type="ewaste" />
+      <SuccessModal 
+        isOpen={successModalOpen} 
+        onClose={() => setSuccessModalOpen(false)}
+        type="ewaste"
+      />
     </div>
   );
 };

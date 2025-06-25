@@ -7,9 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from 'lucide-react';
 import { Calendar as CalendarIcon } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
-import { DatePicker } from "@/components/ui/date-picker"
 import SuccessModal from './SuccessModal';
 import ProcessSteps from './ProcessSteps';
 import QuickInfo from './QuickInfo';
@@ -162,15 +162,16 @@ const BiomedicalBooking = ({ onBack }: { onBack: () => void }) => {
 												</Button>
 											</PopoverTrigger>
 											<PopoverContent className="w-auto p-0" align="center" side="bottom">
-												<DatePicker
-													mode="single"
-													selected={date}
-													onSelect={setDate}
-													disabled={date =>
-														date > new Date()
-													}
-													initialFocus
-												/>
+                        <CalendarComponent
+                          mode="single"
+                          selected={date}
+                          onSelect={setDate}
+                          disabled={date =>
+                            date < new Date()
+                          }
+                          initialFocus
+                          className="p-3 pointer-events-auto"
+                        />
 											</PopoverContent>
 										</Popover>
 									</div>

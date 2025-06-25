@@ -1,243 +1,196 @@
-
 import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import ConfirmationModal from '@/components/ConfirmationModal';
-import PaymentModal from '@/components/PaymentModal';
-import SuccessModal from '@/components/SuccessModal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Calendar } from 'lucide-react';
+import { Calendar as CalendarIcon } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { DatePicker } from "@/components/ui/date-picker"
+import SuccessModal from './SuccessModal';
+import ProcessSteps from './ProcessSteps';
+import QuickInfo from './QuickInfo';
 
-interface BiomedicalBookingProps {
-  onBack: () => void;
-}
-
-const BiomedicalBooking = ({ onBack }: BiomedicalBookingProps) => {
-  const { toast } = useToast();
-  const [selectedWasteTypes, setSelectedWasteTypes] = useState<string[]>([]);
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    societyName: '',
-    address: '',
-    pincode: '',
-    additionalInfo: ''
-  });
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const wasteTypes = [
-    'Used Syringes',
-    'Expired Needles', 
-    'Blood Glucose Strips',
-    'Expired Medications',
-    'Medical Gloves',
-    'Surgical Masks',
-    'Bandages & Gauze',
-    'Thermometer',
-    'Other Medical Waste'
-  ];
-
-  const handleWasteTypeToggle = (wasteType: string) => {
-    setSelectedWasteTypes(prev => 
-      prev.includes(wasteType)
-        ? prev.filter(type => type !== wasteType)
-        : [...prev, wasteType]
-    );
-  };
+const BiomedicalBooking = ({ onBack }: { onBack: () => void }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [society, setSociety] = useState('');
+  const [city, setCity] = useState('');
+  const [wasteType, setWasteType] = useState('');
+	const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedWasteTypes.length === 0) {
-      toast({
-        title: "Please select waste types",
-        description: "Select at least one type of biomedical waste for pickup",
-        variant: "destructive"
-      });
-      return;
-    }
-    setShowConfirmation(true);
-  };
-
-  const handleConfirm = () => {
-    setShowConfirmation(false);
-    setShowPayment(true);
-  };
-
-  const handlePaymentSuccess = () => {
-    setShowPayment(false);
-    setShowSuccess(true);
+    // Handle form submission logic here
+    console.log('Form submitted', { name, email, phone, society, city, wasteType });
+    setSuccessModalOpen(true);
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="mb-6">
-        <Button 
-          variant="ghost" 
-          onClick={onBack}
-          className="mb-4 text-orange-500 hover:text-orange-600"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
+    <div className="min-h-screen bg-neutral-50">
+      <div className="container mx-auto px-4 py-8">
+        <Button variant="ghost" onClick={onBack} className="mb-4">
+          ← Back
         </Button>
-        <h1 className="text-3xl font-bold text-gray-900">Biomedical Waste Collection</h1>
-        <p className="text-gray-600 mt-2">Safe and certified disposal of medical waste</p>
+        
+        <ProcessSteps type="biomedical" />
+        
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Book Your Waste Pickup</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Schedule a convenient pickup time for your waste. Our certified team will 
+            handle everything safely and responsibly.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <Card className="bg-white border-0 shadow-sm">
+              <CardContent className="p-8">
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Pickup Details</h2>
+                  <p className="text-gray-600">Choose your waste type and fill in your information</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <Label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                      Full Name
+                    </Label>
+                    <Input
+                      type="text"
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Your Name"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      Email Address
+                    </Label>
+                    <Input
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="youremail@example.com"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                      Phone Number
+                    </Label>
+                    <Input
+                      type="tel"
+                      id="phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+91 9876543210"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="society" className="block text-sm font-medium text-gray-700">
+                      Society Name
+                    </Label>
+                    <Input
+                      type="text"
+                      id="society"
+                      value={society}
+                      onChange={(e) => setSociety(e.target.value)}
+                      placeholder="Your Society/Apartment Name"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="city" className="block text-sm font-medium text-gray-700">
+                      City
+                    </Label>
+                    <Input
+                      type="text"
+                      id="city"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      placeholder="Your City"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="wasteType" className="block text-sm font-medium text-gray-700">
+                      Type of Biomedical Waste
+                    </Label>
+                    <Select value={wasteType} onValueChange={setWasteType}>
+                      <SelectTrigger className="mt-1 w-full">
+                        <SelectValue placeholder="Select Waste Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="sharps">Sharps (Needles, Syringes)</SelectItem>
+                        <SelectItem value="medications">Expired Medications</SelectItem>
+                        <SelectItem value="bandages">Contaminated Bandages</SelectItem>
+                        <SelectItem value="other">Other Biomedical Waste</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+									<div>
+										<Label htmlFor="date" className="block text-sm font-medium text-gray-700">
+											Preferred Pickup Date
+										</Label>
+										<Popover>
+											<PopoverTrigger asChild>
+												<Button
+													variant={"outline"}
+													className={cn(
+														"w-full justify-start text-left font-normal mt-1",
+														!date && "text-muted-foreground"
+													)}
+												>
+													<CalendarIcon className="mr-2 h-4 w-4" />
+													{date ? format(date, "PPP") : <span>Pick a date</span>}
+												</Button>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0" align="center" side="bottom">
+												<DatePicker
+													mode="single"
+													selected={date}
+													onSelect={setDate}
+													disabled={date =>
+														date > new Date()
+													}
+													initialFocus
+												/>
+											</PopoverContent>
+										</Popover>
+									</div>
+                  <Button type="submit" className="w-full">
+                    Book Biomedical Waste Pickup
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-1">
+            <QuickInfo />
+          </div>
+        </div>
       </div>
 
-      <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
-        <h3 className="font-semibold text-orange-800 mb-2">Important Notice</h3>
-        <p className="text-sm text-orange-700">
-          Biomedical waste collection requires professional handling and certification. 
-          A service fee of ₹299 covers safe disposal, transportation, and compliance documentation.
-        </p>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-orange-500">Booking Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Waste Type Selection */}
-            <div className="space-y-3">
-              <Label className="text-base font-semibold">Select Biomedical Waste Types *</Label>
-              <div className="flex flex-wrap gap-2">
-                {wasteTypes.map(type => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => handleWasteTypeToggle(type)}
-                    className={`pill-option ${selectedWasteTypes.includes(type) ? 'selected border-orange-500 bg-orange-500' : ''}`}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Personal Information */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name *</Label>
-                <Input
-                  id="name"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number *</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              />
-            </div>
-
-            {/* Address Information */}
-            <div className="space-y-2">
-              <Label htmlFor="societyName">Society/Building Name *</Label>
-              <Input
-                id="societyName"
-                required
-                value={formData.societyName}
-                onChange={(e) => setFormData(prev => ({ ...prev, societyName: e.target.value }))}
-              />
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-2 space-y-2">
-                <Label htmlFor="address">Complete Address *</Label>
-                <Textarea
-                  id="address"
-                  required
-                  value={formData.address}
-                  onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                  placeholder="Flat no., Floor, Landmark, Area"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="pincode">Pincode *</Label>
-                <Input
-                  id="pincode"
-                  required
-                  value={formData.pincode}
-                  onChange={(e) => setFormData(prev => ({ ...prev, pincode: e.target.value }))}
-                />
-              </div>
-            </div>
-
-            {/* Additional Information */}
-            <div className="space-y-2">
-              <Label htmlFor="additionalInfo">Additional Information</Label>
-              <Textarea
-                id="additionalInfo"
-                value={formData.additionalInfo}
-                onChange={(e) => setFormData(prev => ({ ...prev, additionalInfo: e.target.value }))}
-                placeholder="Quantity, special handling requirements, or other details"
-              />
-            </div>
-
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold">Service Fee:</span>
-                <span className="text-2xl font-bold text-orange-500">₹299</span>
-              </div>
-              <p className="text-sm text-gray-600 mt-1">
-                Includes pickup, safe disposal, and certification
-              </p>
-            </div>
-
-            <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3">
-              Proceed to Payment
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <ConfirmationModal
-        isOpen={showConfirmation}
-        onClose={() => setShowConfirmation(false)}
-        onConfirm={handleConfirm}
-        data={{
-          ...formData,
-          wasteTypes: selectedWasteTypes
-        }}
-        type="biomedical"
-      />
-
-      <PaymentModal
-        isOpen={showPayment}
-        onClose={() => setShowPayment(false)}
-        onSuccess={handlePaymentSuccess}
-        amount={299}
-      />
-
-      <SuccessModal
-        isOpen={showSuccess}
-        onClose={() => {
-          setShowSuccess(false);
-          onBack();
-        }}
+      <SuccessModal 
+        isOpen={successModalOpen} 
+        onClose={() => setSuccessModalOpen(false)}
         type="biomedical"
       />
     </div>

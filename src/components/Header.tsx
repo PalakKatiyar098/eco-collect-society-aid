@@ -14,17 +14,17 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
 
   const menuItems = [
     { id: 'home', label: 'Home' },
-    { id: 'education', label: 'Education' },
+    { id: 'education', label: 'Learn' },
     { id: 'about', label: 'About' },
   ];
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header className="bg-white border-b border-neutral-200 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div 
-            className="flex items-center gap-2 cursor-pointer" 
+            className="flex items-center gap-3 cursor-pointer" 
             onClick={() => onSectionChange('home')}
           >
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
@@ -37,20 +37,23 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-8">
             {menuItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => onSectionChange(item.id as any)}
-                className={`px-4 py-2 rounded-lg transition-all duration-200 ${
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   activeSection === item.id
-                    ? 'bg-primary text-white'
-                    : 'text-gray-600 hover:text-primary hover:bg-primary/10'
+                    ? 'text-primary bg-primary/5'
+                    : 'text-gray-600 hover:text-primary hover:bg-primary/5'
                 }`}
               >
                 {item.label}
               </button>
             ))}
+            <Button className="bg-primary hover:bg-primary/90 text-white">
+              Contact Us
+            </Button>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -68,7 +71,7 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-100">
+          <div className="md:hidden mt-4 pb-4 border-t border-neutral-200">
             <nav className="flex flex-col space-y-2 pt-4">
               {menuItems.map((item) => (
                 <button
@@ -77,15 +80,18 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
                     onSectionChange(item.id as any);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`px-4 py-3 rounded-lg text-left transition-all duration-200 ${
+                  className={`px-4 py-3 rounded-lg text-left font-medium transition-all duration-200 ${
                     activeSection === item.id
-                      ? 'bg-primary text-white'
-                      : 'text-gray-600 hover:text-primary hover:bg-primary/10'
+                      ? 'text-primary bg-primary/5'
+                      : 'text-gray-600 hover:text-primary hover:bg-primary/5'
                   }`}
                 >
                   {item.label}
                 </button>
               ))}
+              <Button className="mt-2 bg-primary hover:bg-primary/90 text-white">
+                Contact Us
+              </Button>
             </nav>
           </div>
         )}

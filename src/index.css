@@ -3,52 +3,55 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom eco-friendly color palette */
+/* Clean, professional color palette inspired by Saahas */
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 220 13% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 13% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 13% 18%;
 
-    --primary: 142 71% 45%;
+    --primary: 152 48% 36%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 142 20% 85%;
-    --secondary-foreground: 142 71% 25%;
+    --secondary: 210 11% 96%;
+    --secondary-foreground: 220 13% 18%;
 
-    --muted: 142 10% 95%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 11% 96%;
+    --muted-foreground: 215 13% 47%;
 
-    --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 152 20% 85%;
+    --accent-foreground: 152 48% 20%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 65% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 142 71% 45%;
+    --border: 217 20% 88%;
+    --input: 217 20% 88%;
+    --ring: 152 48% 36%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --eco-green: 142 71% 45%;
-    --eco-light: 142 20% 85%;
-    --eco-dark: 142 71% 25%;
-    --bio-orange: 24 95% 53%;
+    --eco-green: 152 48% 36%;
+    --eco-light: 152 20% 85%;
+    --eco-dark: 152 48% 20%;
+    --neutral-50: 210 11% 98%;
+    --neutral-100: 210 11% 96%;
+    --neutral-200: 217 20% 88%;
+    --neutral-700: 215 13% 47%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 220 13% 18%;
     --foreground: 210 40% 98%;
-    --primary: 142 71% 55%;
-    --secondary: 142 20% 25%;
-    --muted: 217.2 32.6% 17.5%;
-    --accent: 160 84% 49%;
+    --primary: 152 48% 46%;
+    --secondary: 215 13% 25%;
+    --muted: 215 13% 25%;
+    --accent: 152 20% 25%;
   }
 }
 
@@ -64,7 +67,7 @@
 
 @layer components {
   .pill-option {
-    @apply px-4 py-2 rounded-full border-2 border-gray-200 text-sm font-medium cursor-pointer transition-all duration-200 hover:border-primary hover:bg-primary/10;
+    @apply px-4 py-2 rounded-full border border-neutral-200 text-sm font-medium cursor-pointer transition-all duration-200 hover:border-primary hover:bg-primary/5;
   }
   
   .pill-option.selected {
@@ -72,10 +75,14 @@
   }
   
   .service-card {
-    @apply bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary/30;
+    @apply bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-neutral-200;
   }
   
-  .gradient-bg {
-    background: linear-gradient(135deg, hsl(142 71% 45%) 0%, hsl(160 84% 39%) 100%);
+  .process-step {
+    @apply bg-white rounded-lg p-6 text-center border border-neutral-200;
+  }
+  
+  .stat-card {
+    @apply text-center p-4;
   }
 }

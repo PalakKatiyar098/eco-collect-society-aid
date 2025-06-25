@@ -34,20 +34,20 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Quick Links */}
           <div className="space-y-4">
-            <h4 className="font-semibold">Support</h4>
+            <h4 className="font-semibold">Quick Links</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>Help Center</li>
-              <li>Waste Guidelines</li>
-              <li>Collection Schedule</li>
-              <li>Certification</li>
+              <li>Home</li>
+              <li>Learn</li>
+              <li>Book Pickup</li>
+              <li>About</li>
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact Info */}
           <div className="space-y-4">
-            <h4 className="font-semibold">Contact</h4>
+            <h4 className="font-semibold">Contact Info</h4>
             <div className="space-y-3 text-sm text-gray-400">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4" />

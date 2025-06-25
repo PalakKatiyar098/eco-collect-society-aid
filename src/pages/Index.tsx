@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,8 @@ import EWasteBooking from '@/components/EWasteBooking';
 import BiomedicalBooking from '@/components/BiomedicalBooking';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ImpactStats from '@/components/ImpactStats';
+import TrustedPartners from '@/components/TrustedPartners';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<'home' | 'ewaste' | 'biomedical' | 'about' | 'education'>('home');
@@ -27,7 +28,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen bg-white">
       <Header activeSection={activeSection} onSectionChange={setActiveSection} />
       {renderContent()}
       <Footer />
@@ -40,74 +41,79 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
     <div className="container mx-auto px-4 py-12 space-y-16">
       {/* Hero Section */}
       <div className="text-center space-y-6 max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold text-gray-900">
-          Responsible Waste Collection
-          <span className="block text-primary">For Your Community</span>
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+          Holistic Solutions
+          <span className="block text-primary">For Every Sector</span>
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Safe, convenient, and eco-friendly pickup services for electronic and biomedical waste. 
-          Helping societies maintain a cleaner, healthier environment.
+        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          EcoCollect provides professional waste management services across various sectors, ensuring compliance with 
+          waste regulations and driving sustainability goals through resource recovery. By leveraging cutting-edge technology 
+          and a deep understanding of all types of waste management, we offer customised solutions that address 
+          the specific needs of our clients.
         </p>
       </div>
 
       {/* Service Selection Cards */}
       <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <Card className="service-card group cursor-pointer" onClick={() => onSelectService('ewaste')}>
+        <Card className="service-card group cursor-pointer hover:border-primary/30" onClick={() => onSelectService('ewaste')}>
           <CardContent className="p-8 text-center space-y-6">
-            <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
-              <Recycle className="w-8 h-8 text-primary group-hover:text-white" />
+            <div className="w-16 h-16 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
+              <Recycle className="w-8 h-8 text-primary" />
             </div>
             <div className="space-y-3">
-              <h3 className="text-2xl font-bold text-gray-900">E-Waste Collection</h3>
+              <h3 className="text-xl font-semibold text-gray-900">E-Waste Collection</h3>
               <p className="text-gray-600">
                 Phones, laptops, batteries, cables and other electronic items. 
                 Free pickup service for your society.
               </p>
             </div>
-            <Button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3">
+            <Button className="w-full bg-primary hover:bg-primary/90 text-white">
               Book E-Waste Pickup
             </Button>
           </CardContent>
         </Card>
 
-        <Card className="service-card group cursor-pointer" onClick={() => onSelectService('biomedical')}>
+        <Card className="service-card group cursor-pointer hover:border-primary/30" onClick={() => onSelectService('biomedical')}>
           <CardContent className="p-8 text-center space-y-6">
-            <div className="w-16 h-16 mx-auto bg-orange-100 rounded-full flex items-center justify-center group-hover:bg-orange-500 transition-all duration-300">
-              <Syringe className="w-8 h-8 text-orange-500 group-hover:text-white" />
+            <div className="w-16 h-16 mx-auto bg-orange-100 rounded-lg flex items-center justify-center">
+              <Syringe className="w-8 h-8 text-orange-600" />
             </div>
             <div className="space-y-3">
-              <h3 className="text-2xl font-bold text-gray-900">Biomedical Waste</h3>
+              <h3 className="text-xl font-semibold text-gray-900">Biomedical Waste</h3>
               <p className="text-gray-600">
                 Syringes, needles, expired medications and medical supplies. 
                 Safe disposal with proper certification.
               </p>
             </div>
-            <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3">
+            <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
               Book Biomedical Pickup
             </Button>
           </CardContent>
         </Card>
       </div>
 
+      {/* Impact Stats */}
+      <ImpactStats />
+
       {/* Features */}
       <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto bg-green-100 rounded-lg flex items-center justify-center">
+          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
             <Leaf className="w-6 h-6 text-primary" />
           </div>
           <h3 className="font-semibold text-gray-900">Eco-Friendly</h3>
           <p className="text-sm text-gray-600">Certified disposal methods that protect our environment</p>
         </div>
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto bg-blue-100 rounded-lg flex items-center justify-center">
-            <Users className="w-6 h-6 text-blue-600" />
+          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
+            <Users className="w-6 h-6 text-primary" />
           </div>
           <h3 className="font-semibold text-gray-900">Community Focused</h3>
           <p className="text-sm text-gray-600">Serving residential societies and apartment complexes</p>
         </div>
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto bg-purple-100 rounded-lg flex items-center justify-center">
-            <Shield className="w-6 h-6 text-purple-600" />
+          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
+            <Shield className="w-6 h-6 text-primary" />
           </div>
           <h3 className="font-semibold text-gray-900">Safe & Secure</h3>
           <p className="text-sm text-gray-600">Trained professionals with proper safety equipment</p>
@@ -119,60 +125,65 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
 
 const AboutSection = () => {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <div className="space-y-12">
+    <div className="container mx-auto px-4 py-12 max-w-6xl">
+      <div className="space-y-16">
         <div className="text-center space-y-6">
           <h1 className="text-4xl font-bold text-gray-900">About EcoCollect</h1>
-          <p className="text-xl text-gray-600">
-            Making waste management simple, safe, and sustainable for communities across India.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            We're committed to making waste disposal convenient, safe, and environmentally 
+            responsible for residential societies across India.
           </p>
         </div>
 
-        <div className="prose prose-lg mx-auto text-gray-700 space-y-6">
-          <p>
-            EcoCollect was founded with a simple mission: to make responsible waste disposal 
-            accessible to every household and community. We understand the challenges societies 
-            face in managing electronic and biomedical waste safely.
-          </p>
-          
-          <h2 className="text-2xl font-bold text-gray-900 mt-8">Our Mission</h2>
-          <p>
-            To create a cleaner, healthier environment by providing convenient, certified 
-            waste collection services that ensure proper disposal and recycling of hazardous materials.
-          </p>
-
-          <h2 className="text-2xl font-bold text-gray-900 mt-8">Our Partners</h2>
-          <div className="grid md:grid-cols-2 gap-6 not-prose">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="font-semibold text-gray-900 mb-2">Certified Recyclers</h3>
-              <p className="text-gray-600 text-sm">
-                We work with government-approved recycling facilities that follow 
-                international standards for e-waste processing.
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="font-semibold text-gray-900 mb-2">Medical Waste Handlers</h3>
-              <p className="text-gray-600 text-sm">
-                Licensed biomedical waste management companies ensure safe disposal 
-                with proper incineration and documentation.
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="font-semibold text-gray-900 mb-2">Local Authorities</h3>
-              <p className="text-gray-600 text-sm">
-                Partnering with municipal corporations and pollution control boards 
-                for compliance and environmental protection.
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="font-semibold text-gray-900 mb-2">Community Organizations</h3>
-              <p className="text-gray-600 text-sm">
-                Working with resident welfare associations to create awareness 
-                and facilitate easy waste collection.
-              </p>
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900">Our Mission</h2>
+            <p className="text-gray-600">
+              EcoCollect was founded with a simple yet powerful mission: to bridge the gap 
+              between residential communities and proper waste management services. We 
+              believe that every household should have access to safe, convenient, and 
+              environmentally responsible waste disposal options.
+            </p>
+            
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
+                  <Users className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Community First</h3>
+                  <p className="text-sm text-gray-600">We prioritize the health and convenience of residential communities</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
+                  <Shield className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Safety & Compliance</h3>
+                  <p className="text-sm text-gray-600">All operations follow strict safety protocols and regulatory standards</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
+                  <Leaf className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Environmental Impact</h3>
+                  <p className="text-sm text-gray-600">Committed to reducing environmental footprint through proper recycling</p>
+                </div>
+              </div>
             </div>
           </div>
+          
+          <div className="bg-neutral-50 rounded-xl p-8">
+            <ImpactStats />
+          </div>
         </div>
+
+        <TrustedPartners />
       </div>
     </div>
   );

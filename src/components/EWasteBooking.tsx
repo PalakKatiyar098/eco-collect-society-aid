@@ -1,275 +1,233 @@
-
 import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Upload, X, CheckCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import ConfirmationModal from '@/components/ConfirmationModal';
-import SuccessModal from '@/components/SuccessModal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Calendar } from 'lucide-react';
+import { Calendar as CalendarComponent } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
 
-interface EWasteBookingProps {
-  onBack: () => void;
-}
+import SuccessModal from './SuccessModal';
+import ProcessSteps from './ProcessSteps';
+import QuickInfo from './QuickInfo';
 
-const EWasteBooking = ({ onBack }: EWasteBookingProps) => {
-  const { toast } = useToast();
-  const [selectedWasteTypes, setSelectedWasteTypes] = useState<string[]>([]);
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    societyName: '',
-    address: '',
-    pincode: '',
-    additionalInfo: ''
-  });
-  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+const EWasteBooking = ({ onBack }: { onBack: () => void }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [society, setSociety] = useState('');
+  const [address, setAddress] = useState('');
+  const [ewasteType, setEwasteType] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [terms, setTerms] = useState(false);
+  const [date, setDate] = React.useState<Date | undefined>(new Date())
 
-  const wasteTypes = [
-    'Mobile Phones',
-    'Laptops/Computers',
-    'Batteries',
-    'Chargers & Cables',
-    'Small Appliances',
-    'Tablets',
-    'TVs/Monitors',
-    'Printers',
-    'Other Electronics'
-  ];
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
 
-  const handleWasteTypeToggle = (wasteType: string) => {
-    setSelectedWasteTypes(prev => 
-      prev.includes(wasteType)
-        ? prev.filter(type => type !== wasteType)
-        : [...prev, wasteType]
-    );
-  };
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    if (uploadedImages.length + files.length > 5) {
-      toast({
-        title: "Too many images",
-        description: "You can upload maximum 5 images",
-        variant: "destructive"
-      });
-      return;
-    }
-    setUploadedImages(prev => [...prev, ...files]);
-  };
-
-  const removeImage = (index: number) => {
-    setUploadedImages(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedWasteTypes.length === 0) {
-      toast({
-        title: "Please select waste types",
-        description: "Select at least one type of e-waste for pickup",
-        variant: "destructive"
-      });
-      return;
-    }
-    setShowConfirmation(true);
-  };
+    setIsSubmitting(true);
 
-  const handleConfirm = () => {
-    setShowConfirmation(false);
-    setShowSuccess(true);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    setIsSubmitting(false);
+    setSuccessModalOpen(true);
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="mb-6">
-        <Button 
-          variant="ghost" 
-          onClick={onBack}
-          className="mb-4 text-primary hover:text-primary/80"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Home
+    <div className="min-h-screen bg-neutral-50">
+      <div className="container mx-auto px-4 py-8">
+        <Button variant="ghost" onClick={onBack} className="mb-4">
+          ← Back
         </Button>
-        <h1 className="text-3xl font-bold text-gray-900">E-Waste Collection</h1>
-        <p className="text-gray-600 mt-2">Schedule a free pickup for your electronic waste</p>
+        
+        <ProcessSteps type="ewaste" />
+        
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Book Your Waste Pickup</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Schedule a convenient pickup time for your waste. Our certified team will 
+            handle everything safely and responsibly.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <Card className="bg-white border-0 shadow-sm">
+              <CardContent className="p-8">
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Pickup Details</h2>
+                  <p className="text-gray-600">Choose your waste type and fill in your information</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <Label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                      Full Name
+                    </Label>
+                    <Input
+                      type="text"
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Your Name"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      Email Address
+                    </Label>
+                    <Input
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="youremail@example.com"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                      Phone Number
+                    </Label>
+                    <Input
+                      type="tel"
+                      id="phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+91 9876543210"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="society" className="block text-sm font-medium text-gray-700">
+                      Society Name
+                    </Label>
+                    <Input
+                      type="text"
+                      id="society"
+                      value={society}
+                      onChange={(e) => setSociety(e.target.value)}
+                      placeholder="Your Society Name"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                      Full Address
+                    </Label>
+                    <Input
+                      type="text"
+                      id="address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="Flat no, Building, Street, Area"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="ewasteType" className="block text-sm font-medium text-gray-700">
+                      Type of E-Waste
+                    </Label>
+                    <Select value={ewasteType} onValueChange={setEwasteType}>
+                      <SelectTrigger className="mt-1 w-full">
+                        <SelectValue placeholder="Select E-Waste Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="electronics">Electronics (TV, Fridge, etc.)</SelectItem>
+                        <SelectItem value="it_equipment">IT Equipment (Computers, Laptops)</SelectItem>
+                        <SelectItem value="small_appliances">Small Appliances (Microwave, Iron)</SelectItem>
+                        <SelectItem value="cables_batteries">Cables and Batteries</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
+                      Approximate Quantity (in kgs)
+                    </Label>
+                    <Input
+                      type="number"
+                      id="quantity"
+                      value={quantity}
+                      onChange={(e) => setQuantity(e.target.value)}
+                      placeholder="Enter Quantity"
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="block text-sm font-medium text-gray-700">
+                      Pickup Date
+                    </Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !date && "text-muted-foreground"
+                          )}
+                        >
+                          <Calendar className="mr-2 h-4 w-4" />
+                          {date ? format(date, "PPP") : <span>Pick a date</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarComponent
+                          mode="single"
+                          selected={date}
+                          onSelect={setDate}
+                          disabled={(date) =>
+                            date < new Date()
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="terms" checked={terms} onCheckedChange={setTerms} />
+                    <Label htmlFor="terms" className="text-sm font-medium text-gray-700">
+                      I agree to the terms and conditions
+                    </Label>
+                  </div>
+
+                  <Button type="submit" disabled={isSubmitting} className="w-full">
+                    {isSubmitting ? 'Submitting...' : 'Book E-Waste Pickup'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-1">
+            <QuickInfo />
+          </div>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-primary">Booking Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Waste Type Selection */}
-            <div className="space-y-3">
-              <Label className="text-base font-semibold">Select E-Waste Types *</Label>
-              <div className="flex flex-wrap gap-2">
-                {wasteTypes.map(type => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => handleWasteTypeToggle(type)}
-                    className={`pill-option ${selectedWasteTypes.includes(type) ? 'selected' : ''}`}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Personal Information */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name *</Label>
-                <Input
-                  id="name"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number *</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              />
-            </div>
-
-            {/* Address Information */}
-            <div className="space-y-2">
-              <Label htmlFor="societyName">Society/Building Name *</Label>
-              <Input
-                id="societyName"
-                required
-                value={formData.societyName}
-                onChange={(e) => setFormData(prev => ({ ...prev, societyName: e.target.value }))}
-              />
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="md:col-span-2 space-y-2">
-                <Label htmlFor="address">Complete Address *</Label>
-                <Textarea
-                  id="address"
-                  required
-                  value={formData.address}
-                  onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                  placeholder="Flat no., Floor, Landmark, Area"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="pincode">Pincode *</Label>
-                <Input
-                  id="pincode"
-                  required
-                  value={formData.pincode}
-                  onChange={(e) => setFormData(prev => ({ ...prev, pincode: e.target.value }))}
-                />
-              </div>
-            </div>
-
-            {/* Image Upload */}
-            <div className="space-y-3">
-              <Label className="text-base font-semibold">Upload Images (Optional)</Label>
-              <p className="text-sm text-gray-600">Upload photos of your e-waste items (Max 5 images)</p>
-              
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary transition-colors">
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  id="imageUpload"
-                />
-                <label htmlFor="imageUpload" className="cursor-pointer">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-600">Click to upload images</p>
-                  <p className="text-sm text-gray-400">PNG, JPG up to 10MB each</p>
-                </label>
-              </div>
-
-              {uploadedImages.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                  {uploadedImages.map((file, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt={`Upload ${index + 1}`}
-                        className="w-full h-20 object-cover rounded-lg"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeImage(index)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Additional Information */}
-            <div className="space-y-2">
-              <Label htmlFor="additionalInfo">Additional Information</Label>
-              <Textarea
-                id="additionalInfo"
-                value={formData.additionalInfo}
-                onChange={(e) => setFormData(prev => ({ ...prev, additionalInfo: e.target.value }))}
-                placeholder="Any specific instructions or additional details"
-              />
-            </div>
-
-            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white py-3">
-              Schedule Pickup
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <ConfirmationModal
-        isOpen={showConfirmation}
-        onClose={() => setShowConfirmation(false)}
-        onConfirm={handleConfirm}
-        data={{
-          ...formData,
-          wasteTypes: selectedWasteTypes,
-          images: uploadedImages
-        }}
-        type="ewaste"
-      />
-
-      <SuccessModal
-        isOpen={showSuccess}
-        onClose={() => {
-          setShowSuccess(false);
-          onBack();
-        }}
-        type="ewaste"
-      />
+      <SuccessModal isOpen={successModalOpen} onClose={() => setSuccessModalOpen(false)} type="ewaste" />
     </div>
   );
 };

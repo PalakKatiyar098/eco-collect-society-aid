@@ -7,9 +7,7 @@ import EWasteBooking from '@/components/EWasteBooking';
 import BiomedicalBooking from '@/components/BiomedicalBooking';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import ImpactStats from '@/components/ImpactStats';
 import TrustedPartners from '@/components/TrustedPartners';
-import ProcessSteps from '@/components/ProcessSteps';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<'home' | 'ewaste' | 'biomedical' | 'about' | 'education'>('home');
@@ -39,6 +37,8 @@ const Index = () => {
 };
 
 const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' | 'biomedical') => void }) => {
+  const [activeTab, setActiveTab] = useState('ewaste');
+
   return (
     <div className="container mx-auto px-4 py-12 space-y-16">
       {/* Hero Section */}
@@ -57,10 +57,10 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
 
       {/* Service Selection Cards */}
       <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <Card className="service-card group cursor-pointer hover:border-primary/30" onClick={() => onSelectService('ewaste')}>
+        <Card className="service-card group cursor-pointer hover:border-blue-300" onClick={() => onSelectService('ewaste')}>
           <CardContent className="p-8 text-center space-y-6">
-            <div className="w-16 h-16 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
-              <Recycle className="w-8 h-8 text-primary" />
+            <div className="w-16 h-16 mx-auto bg-blue-100 rounded-lg flex items-center justify-center">
+              <Recycle className="w-8 h-8 text-blue-600" />
             </div>
             <div className="space-y-3">
               <h3 className="text-xl font-semibold text-gray-900">E-Waste Collection</h3>
@@ -69,7 +69,7 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
                 Free pickup service for your society.
               </p>
             </div>
-            <Button className="w-full bg-primary hover:bg-primary/90 text-white">
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
               Book E-Waste Pickup
             </Button>
           </CardContent>
@@ -77,8 +77,8 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
 
         <Card className="service-card group cursor-pointer hover:border-primary/30" onClick={() => onSelectService('biomedical')}>
           <CardContent className="p-8 text-center space-y-6">
-            <div className="w-16 h-16 mx-auto bg-orange-100 rounded-lg flex items-center justify-center">
-              <Syringe className="w-8 h-8 text-orange-600" />
+            <div className="w-16 h-16 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
+              <Syringe className="w-8 h-8 text-primary" />
             </div>
             <div className="space-y-3">
               <h3 className="text-xl font-semibold text-gray-900">Biomedical Waste</h3>
@@ -87,18 +87,40 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
                 Safe disposal with proper certification.
               </p>
             </div>
-            <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white">
+            <Button className="w-full bg-primary hover:bg-primary/90 text-white">
               Book Biomedical Pickup
             </Button>
           </CardContent>
         </Card>
       </div>
 
-      {/* Process Steps */}
-      <ProcessSteps type="general" />
+      {/* Features */}
+      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
+            <Leaf className="w-6 h-6 text-primary" />
+          </div>
+          <h3 className="font-semibold text-gray-900">Eco-Friendly</h3>
+          <p className="text-sm text-gray-600">Certified disposal methods that protect our environment</p>
+        </div>
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
+            <Users className="w-6 h-6 text-primary" />
+          </div>
+          <h3 className="font-semibold text-gray-900">Community Focused</h3>
+          <p className="text-sm text-gray-600">Serving residential societies and apartment complexes</p>
+        </div>
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
+            <Shield className="w-6 h-6 text-primary" />
+          </div>
+          <h3 className="font-semibold text-gray-900">Safe & Secure</h3>
+          <p className="text-sm text-gray-600">Trained professionals with proper safety equipment</p>
+        </div>
+      </div>
 
       {/* Education Section with Tabs */}
-      <div className="bg-neutral-50 rounded-xl p-8">
+      <div className="rounded-xl p-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Learn About Responsible Waste Disposal</h2>
           <p className="text-gray-600 max-w-3xl mx-auto">
@@ -107,17 +129,17 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
           </p>
         </div>
 
-        <Tabs defaultValue="ewaste" className="w-full max-w-4xl mx-auto">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full max-w-4xl mx-auto">
           <TabsList className="grid w-full grid-cols-2 mb-8">
             <TabsTrigger value="ewaste" className="text-base">E-Waste</TabsTrigger>
             <TabsTrigger value="biomedical" className="text-base">Biomedical Waste</TabsTrigger>
           </TabsList>
           
           <TabsContent value="ewaste" className="space-y-6">
-            <div className="bg-white rounded-lg p-6">
+            <div className="bg-blue-50 rounded-lg p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Recycle className="w-4 h-4 text-primary" />
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Recycle className="w-4 h-4 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900">What is E-Waste?</h3>
               </div>
@@ -139,10 +161,10 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
               </div>
             </div>
             
-            <div className="bg-white rounded-lg p-6">
+            <div className="bg-blue-50 rounded-lg p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-orange-600" />
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Shield className="w-4 h-4 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900">Why Proper Disposal Matters</h3>
               </div>
@@ -166,10 +188,10 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
           </TabsContent>
           
           <TabsContent value="biomedical" className="space-y-6">
-            <div className="bg-white rounded-lg p-6">
+            <div className="bg-primary/5 rounded-lg p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Syringe className="w-4 h-4 text-orange-600" />
+                <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                  <Syringe className="w-4 h-4 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900">What is Biomedical Waste?</h3>
               </div>
@@ -189,7 +211,7 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
               </div>
             </div>
             
-            <div className="bg-white rounded-lg p-6">
+            <div className="bg-primary/5 rounded-lg p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
                   <Shield className="w-4 h-4 text-red-600" />
@@ -204,28 +226,47 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
           </TabsContent>
         </Tabs>
 
-        <div className="mt-8 bg-gradient-to-r from-green-100 to-blue-100 p-6 rounded-xl">
+        <div className={`mt-8 p-6 rounded-xl ${activeTab === 'ewaste' ? 'bg-blue-100' : 'bg-primary/10'}`}>
           <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Did You Know?</h3>
           <div className="grid md:grid-cols-3 gap-6 text-center">
-            <div>
-              <div className="text-2xl font-bold text-primary">95%</div>
-              <p className="text-sm text-gray-700">of e-waste materials can be recycled</p>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-orange-500">1 ton</div>
-              <p className="text-sm text-gray-700">of e-waste contains more gold than 17 tons of ore</p>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-blue-600">50M</div>
-              <p className="text-sm text-gray-700">tons of e-waste generated globally each year</p>
-            </div>
+            {activeTab === 'ewaste' ? (
+              <>
+                <div>
+                  <div className="text-2xl font-bold text-blue-600">95%</div>
+                  <p className="text-sm text-gray-700">of e-waste materials can be recycled</p>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-blue-600">1 ton</div>
+                  <p className="text-sm text-gray-700">of e-waste contains more gold than 17 tons of ore</p>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-blue-600">50M</div>
+                  <p className="text-sm text-gray-700">tons of e-waste generated globally each year</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <div className="text-2xl font-bold text-primary">85%</div>
+                  <p className="text-sm text-gray-700">of medical waste can be safely treated</p>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-primary">16B</div>
+                  <p className="text-sm text-gray-700">injections given worldwide annually</p>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-primary">99%</div>
+                  <p className="text-sm text-gray-700">pathogen reduction through proper treatment</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
 
       {/* About Section */}
       <div className="bg-white py-16">
-        <div className="container mx-auto px-16">
+        <div className="container mx-auto px-4 md:px-16">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">About EcoCollect</h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
@@ -278,37 +319,29 @@ const HomeSection = ({ onSelectService }: { onSelectService: (section: 'ewaste' 
             </div>
             
             <div className="bg-neutral-50 rounded-xl p-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Our Impact</h3>
-              <ImpactStats />
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Why Choose EcoCollect?</h3>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                  <span className="text-gray-700">Licensed and certified waste handlers</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                  <span className="text-gray-700">Convenient doorstep collection</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                  <span className="text-gray-700">Environmentally responsible disposal</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                  <span className="text-gray-700">Proper documentation and compliance</span>
+                </div>
+              </div>
             </div>
           </div>
 
           <TrustedPartners />
-        </div>
-      </div>
-
-      {/* Features */}
-      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
-            <Leaf className="w-6 h-6 text-primary" />
-          </div>
-          <h3 className="font-semibold text-gray-900">Eco-Friendly</h3>
-          <p className="text-sm text-gray-600">Certified disposal methods that protect our environment</p>
-        </div>
-        <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
-            <Users className="w-6 h-6 text-primary" />
-          </div>
-          <h3 className="font-semibold text-gray-900">Community Focused</h3>
-          <p className="text-sm text-gray-600">Serving residential societies and apartment complexes</p>
-        </div>
-        <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
-            <Shield className="w-6 h-6 text-primary" />
-          </div>
-          <h3 className="font-semibold text-gray-900">Safe & Secure</h3>
-          <p className="text-sm text-gray-600">Trained professionals with proper safety equipment</p>
         </div>
       </div>
     </div>
@@ -371,7 +404,25 @@ const AboutSection = () => {
           </div>
           
           <div className="bg-neutral-50 rounded-xl p-8">
-            <ImpactStats />
+            <h3 className="text-xl font-semibold text-gray-900 mb-6">Why Choose EcoCollect?</h3>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-primary" />
+                <span className="text-gray-700">Licensed and certified waste handlers</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-primary" />
+                <span className="text-gray-700">Convenient doorstep collection</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-primary" />
+                <span className="text-gray-700">Environmentally responsible disposal</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-primary" />
+                <span className="text-gray-700">Proper documentation and compliance</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -394,7 +445,7 @@ const EducationSection = () => {
 
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-blue-600 flex items-center gap-2">
               <Recycle className="w-6 h-6" />
               E-Waste Facts
             </h2>
@@ -420,7 +471,7 @@ const EducationSection = () => {
           </div>
 
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-orange-500 flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
               <Syringe className="w-6 h-6" />
               Biomedical Waste Safety
             </h2>
@@ -446,15 +497,15 @@ const EducationSection = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-green-100 to-blue-100 p-8 rounded-xl">
+        <div className="bg-blue-100 p-8 rounded-xl">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Did You Know?</h2>
           <div className="grid md:grid-cols-3 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold text-primary">95%</div>
+              <div className="text-3xl font-bold text-blue-600">95%</div>
               <p className="text-sm text-gray-700">of e-waste materials can be recycled</p>
             </div>
             <div>
-              <div className="text-3xl font-bold text-orange-500">1 ton</div>
+              <div className="text-3xl font-bold text-primary">1 ton</div>
               <p className="text-sm text-gray-700">of e-waste contains more gold than 17 tons of ore</p>
             </div>
             <div>

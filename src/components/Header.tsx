@@ -12,9 +12,27 @@ interface HeaderProps {
 const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleNavClick = (action: string) => {
+    if (action === 'book-pickup') {
+      onSectionChange('ewaste');
+    } else if (action === 'learn') {
+      scrollToSection('education-section');
+    } else if (action === 'about') {
+      scrollToSection('about-section');
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   const menuItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'education', label: 'Learn' },
+    { id: 'book-pickup', label: 'Book Pickup' },
+    { id: 'learn', label: 'Learn' },
     { id: 'about', label: 'About' },
   ];
 
@@ -41,12 +59,8 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
             {menuItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => onSectionChange(item.id as any)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  activeSection === item.id
-                    ? 'text-primary bg-primary/5'
-                    : 'text-gray-600 hover:text-primary hover:bg-primary/5'
-                }`}
+                onClick={() => handleNavClick(item.id)}
+                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
               >
                 {item.label}
               </button>
@@ -76,15 +90,8 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
               {menuItems.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => {
-                    onSectionChange(item.id as any);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`px-4 py-3 rounded-lg text-left font-medium transition-all duration-200 ${
-                    activeSection === item.id
-                      ? 'text-primary bg-primary/5'
-                      : 'text-gray-600 hover:text-primary hover:bg-primary/5'
-                  }`}
+                  onClick={() => handleNavClick(item.id)}
+                  className="px-4 py-3 rounded-lg text-left font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
                 >
                   {item.label}
                 </button>

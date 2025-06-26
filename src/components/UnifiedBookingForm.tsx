@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -148,6 +147,12 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
     }
   };
 
+  const handleTabChange = (value: string) => {
+    if (value === 'ewaste' || value === 'biomedical') {
+      setActiveTab(value);
+    }
+  };
+
   const currentColor = activeTab === 'ewaste' ? 'blue' : 'green';
 
   return (
@@ -169,7 +174,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
           <div className="lg:col-span-2">
             <Card className="bg-white border-0 shadow-sm">
               <CardContent className="p-8">
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mb-6">
+                <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full mb-6">
                   <TabsList className="grid w-full grid-cols-2 mb-6">
                     <TabsTrigger value="ewaste" className="flex items-center gap-2">
                       <Recycle className="w-4 h-4" />

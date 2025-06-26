@@ -20,9 +20,7 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
   };
 
   const handleNavClick = (action: string) => {
-    if (action === 'book-pickup') {
-      onSectionChange('ewaste');
-    } else if (action === 'learn') {
+    if (action === 'learn') {
       scrollToSection('education-section');
     } else if (action === 'about') {
       scrollToSection('about-section');
@@ -33,7 +31,6 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
   };
 
   const menuItems = [
-    { id: 'book-pickup', label: 'Book Pickup' },
     { id: 'learn', label: 'Learn' },
     { id: 'about', label: 'About' },
   ];
@@ -68,7 +65,7 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
               </button>
             ))}
             <Button 
-              className="bg-primary hover:bg-primary/90 text-white"
+              className="bg-gray-700 hover:bg-gray-800 text-white"
               onClick={() => handleNavClick('schedule-pickup')}
             >
               Schedule Pickup
@@ -102,7 +99,7 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
                 </button>
               ))}
               <Button 
-                className="mt-2 bg-primary hover:bg-primary/90 text-white"
+                className="mt-2 bg-gray-700 hover:bg-gray-800 text-white"
                 onClick={() => handleNavClick('schedule-pickup')}
               >
                 Schedule Pickup

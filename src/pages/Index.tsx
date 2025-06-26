@@ -48,16 +48,15 @@ const HomeSection = ({
       {/* Hero Section */}
       <div className="text-center space-y-6 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-          Responsible Waste
-          <span className="block text-primary">Pickup Service</span>
+          Responsible Waste Collection
+          <span className="block text-primary">for Your Society</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-          Safe, convenient, and eco-friendly waste collection for your society. Choose 
-          your waste type and schedule a pickup in minutes.
+          Safe, convenient, and eco-friendly waste collection for your apartment complex. Choose your waste type and schedule a pickup in minutes.
         </p>
         <div className="flex items-center justify-center gap-2 text-primary">
           <Recycle className="w-5 h-5" />
-          <span className="text-sm font-medium">Sustainable • Secure • Sustainable</span>
+          <span className="text-sm font-medium">Convenient • Safe • Responsible</span>
         </div>
       </div>
 
@@ -126,7 +125,7 @@ const HomeSection = ({
       </div>
 
       {/* Info Section */}
-      <div id="education-section" className="rounded-xl">
+      <div id="education-section" className="rounded-xl pt-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Learn About Responsible Waste Disposal</h2>
           <p className="text-gray-600 max-w-3xl mx-auto">
@@ -136,9 +135,19 @@ const HomeSection = ({
         </div>
 
         <Tabs value={activeInfoTab} onValueChange={setActiveInfoTab} className="w-full max-w-6xl mx-auto">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8 h-12">
-            <TabsTrigger value="ewaste" className="text-base py-3 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700">E-Waste</TabsTrigger>
-            <TabsTrigger value="biomedical" className="text-base py-3 data-[state=active]:bg-green-100 data-[state=active]:text-green-700">Biomedical Waste</TabsTrigger>
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8 h-12 bg-muted">
+            <TabsTrigger 
+              value="ewaste" 
+              className="text-base py-3 data-[state=active]:bg-blue-500 data-[state=active]:text-white"
+            >
+              E-Waste
+            </TabsTrigger>
+            <TabsTrigger 
+              value="biomedical" 
+              className="text-base py-3 data-[state=active]:bg-green-500 data-[state=active]:text-white"
+            >
+              Biomedical Waste
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="ewaste" className="space-y-8">
@@ -197,16 +206,16 @@ const HomeSection = ({
                 <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Did You Know?</h3>
                 <div className="grid md:grid-cols-3 gap-6 text-center">
                   <div>
-                    <div className="text-2xl font-bold text-blue-600">95%</div>
-                    <p className="text-sm text-gray-700">of e-waste materials can be recycled</p>
+                    <div className="text-2xl font-bold text-blue-600">15kg</div>
+                    <p className="text-sm text-gray-700">average e-waste generated per household annually</p>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-blue-600">1 ton</div>
-                    <p className="text-sm text-gray-700">of e-waste contains more gold than 17 tons of ore</p>
+                    <div className="text-2xl font-bold text-blue-600">80%</div>
+                    <p className="text-sm text-gray-700">of society residents are unaware of proper e-waste disposal</p>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-blue-600">50M</div>
-                    <p className="text-sm text-gray-700">tons of e-waste generated globally each year</p>
+                    <div className="text-2xl font-bold text-blue-600">500+</div>
+                    <p className="text-sm text-gray-700">families can be served by one organized collection drive</p>
                   </div>
                 </div>
               </div>
@@ -268,16 +277,16 @@ const HomeSection = ({
                 <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Did You Know?</h3>
                 <div className="grid md:grid-cols-3 gap-6 text-center">
                   <div>
-                    <div className="text-2xl font-bold text-green-600">85%</div>
-                    <p className="text-sm text-gray-700">of medical waste can be safely treated</p>
+                    <div className="text-2xl font-bold text-green-600">1 in 4</div>
+                    <p className="text-sm text-gray-700">households have diabetic family members generating medical waste</p>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-green-600">16B</div>
-                    <p className="text-sm text-gray-700">injections given worldwide annually</p>
+                    <div className="text-2xl font-bold text-green-600">200+</div>
+                    <p className="text-sm text-gray-700">syringes used annually by an average diabetic household</p>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-green-600">99%</div>
-                    <p className="text-sm text-gray-700">pathogen reduction through proper treatment</p>
+                    <div className="text-2xl font-bold text-green-600">90%</div>
+                    <p className="text-sm text-gray-700">of families dispose medical waste incorrectly at home</p>
                   </div>
                 </div>
               </div>

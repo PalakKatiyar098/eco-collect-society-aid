@@ -18,7 +18,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }: Confirmat
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full p-6 sm:p-8">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             Confirm Booking Details
@@ -36,7 +36,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }: Confirmat
           {/* Service Type */}
           <div>
             <h3 className="font-semibold mb-2">Service Type</h3>
-            <Badge variant="secondary" className={`${isEWaste ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}`}>
+            <Badge variant="secondary" className={`${isEWaste ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
               {isEWaste ? 'E-Waste Collection' : 'Biomedical Waste Collection'}
             </Badge>
           </div>
@@ -112,13 +112,13 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }: Confirmat
 
           {/* Service Fee (Biomedical only) */}
           {!isEWaste && (
-            <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
               <div className="flex justify-between items-center">
                 <span className="font-semibold">Service Fee:</span>
-                <span className="text-2xl font-bold text-orange-500">₹299</span>
+                <span className="text-2xl font-bold text-green-600">₹299</span>
               </div>
-              <p className="text-sm text-orange-700 mt-1">
-                Includes pickup, safe disposal, and certification
+              <p className="text-sm text-green-700 mt-1">
+                Includes pickup, safe disposal, and documentation
               </p>
             </div>
           )}
@@ -130,7 +130,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }: Confirmat
             </Button>
             <Button 
               onClick={onConfirm} 
-              className={`flex-1 ${isEWaste ? 'bg-primary hover:bg-primary/90' : 'bg-orange-500 hover:bg-orange-600'} text-white`}
+              className={`flex-1 ${isEWaste ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'} text-white`}
             >
               {isEWaste ? 'Confirm Booking' : 'Proceed to Payment'}
             </Button>

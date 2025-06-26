@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { Clock, Users, MapPin, Shield } from 'lucide-react';
+import { Clock, Users, MapPin } from 'lucide-react';
 
 const QuickInfo = () => {
   return (
-    <div className="bg-neutral-50 rounded-lg p-6 space-y-6">
-      <h3 className="font-semibold text-gray-900">Quick Info</h3>
+    <div className="bg-white rounded-xl p-8">
+      <h3 className="text-2xl font-bold text-gray-900 mb-8">Quick Info</h3>
       
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
           <h4 className="font-medium text-gray-900 mb-1 flex items-center gap-2">
             <Clock className="w-4 h-4 text-primary" />
@@ -34,7 +34,7 @@ const QuickInfo = () => {
         </div>
       </div>
 
-      <div className="border-t border-neutral-200 pt-4">
+      <div className="border-t border-neutral-200 pt-6 mt-6">
         <h4 className="font-semibold text-primary mb-3">Why Choose Us?</h4>
         <ul className="space-y-2 text-sm text-gray-600">
           <li className="flex items-center gap-2">

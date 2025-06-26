@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import SuccessModal from './SuccessModal';
 import ProcessSteps from './ProcessSteps';
 import QuickInfo from './QuickInfo';
+import ConfirmationModal from './ConfirmationModal';
 
 interface FormData {
   name: string;
@@ -36,8 +37,13 @@ interface FormErrors {
   wasteTypes?: string;
 }
 
-const UnifiedBookingForm = ({ onBack }: { onBack: () => void }) => {
-  const [activeTab, setActiveTab] = useState('ewaste');
+interface UnifiedBookingFormProps {
+  onBack: () => void;
+  defaultTab?: 'ewaste' | 'biomedical';
+}
+
+const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFormProps) => {
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -50,6 +56,7 @@ const UnifiedBookingForm = ({ onBack }: { onBack: () => void }) => {
     date: new Date()
   });
   const [errors, setErrors] = useState<FormErrors>({});
+  const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
 
   const ewasteOptions = [
@@ -76,8 +83,11 @@ const UnifiedBookingForm = ({ onBack }: { onBack: () => void }) => {
     const newErrors: FormErrors = {};
 
     if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
     if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
     if (!formData.address.trim()) newErrors.address = 'Address is required';
     if (!formData.pincode.trim()) newErrors.pincode = 'PIN code is required';
@@ -90,9 +100,31 @@ const UnifiedBookingForm = ({ onBack }: { onBack: () => void }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Form submitted', { ...formData, wasteCategory: activeTab });
-      setSuccessModalOpen(true);
+      setConfirmationModalOpen(true);
     }
+  };
+
+  const handleConfirmBooking = () => {
+    console.log('Form submitted', { ...formData, wasteCategory: activeTab });
+    setConfirmationModalOpen(false);
+    setSuccessModalOpen(true);
+  };
+
+  const handleSuccessModalClose = () => {
+    setSuccessModalOpen(false);
+    // Reset form to empty state
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      pincode: '',
+      wasteTypes: [],
+      additionalNotes: '',
+      images: [],
+      date: new Date()
+    });
+    setErrors({});
   };
 
   const handleWasteTypeToggle = (wasteType: string) => {
@@ -314,7 +346,7 @@ const UnifiedBookingForm = ({ onBack }: { onBack: () => void }) => {
 
                   <div>
                     <Label className="block text-sm font-medium text-gray-700 mb-2">
-                      Attach Images (Optional)
+                      Attach Images
                     </Label>
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                       <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
@@ -356,22 +388,26 @@ const UnifiedBookingForm = ({ onBack }: { onBack: () => void }) => {
                 </form>
               </CardContent>
             </Card>
-
-            {/* Process Steps moved below the form */}
-            <div className="mt-8">
-              <ProcessSteps type={activeTab as 'ewaste' | 'biomedical'} showLines={false} />
-            </div>
           </div>
 
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-8">
             <QuickInfo />
+            <ProcessSteps type={activeTab as 'ewaste' | 'biomedical'} showLines={false} />
           </div>
         </div>
       </div>
 
+      <ConfirmationModal 
+        isOpen={confirmationModalOpen} 
+        onClose={() => setConfirmationModalOpen(false)}
+        onConfirm={handleConfirmBooking}
+        data={{ ...formData, societyName: formData.address }}
+        type={activeTab as 'ewaste' | 'biomedical'}
+      />
+
       <SuccessModal 
         isOpen={successModalOpen} 
-        onClose={() => setSuccessModalOpen(false)}
+        onClose={handleSuccessModalClose}
         type={activeTab as 'ewaste' | 'biomedical'}
       />
     </div>

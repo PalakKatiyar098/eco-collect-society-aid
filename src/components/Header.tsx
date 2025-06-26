@@ -26,6 +26,8 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
       scrollToSection('education-section');
     } else if (action === 'about') {
       scrollToSection('about-section');
+    } else if (action === 'schedule-pickup') {
+      onSectionChange('ewaste');
     }
     setIsMobileMenuOpen(false);
   };
@@ -65,8 +67,11 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
                 {item.label}
               </button>
             ))}
-            <Button className="bg-primary hover:bg-primary/90 text-white">
-              Contact Us
+            <Button 
+              className="bg-primary hover:bg-primary/90 text-white"
+              onClick={() => handleNavClick('schedule-pickup')}
+            >
+              Schedule Pickup
             </Button>
           </nav>
 
@@ -96,8 +101,11 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
                   {item.label}
                 </button>
               ))}
-              <Button className="mt-2 bg-primary hover:bg-primary/90 text-white">
-                Contact Us
+              <Button 
+                className="mt-2 bg-primary hover:bg-primary/90 text-white"
+                onClick={() => handleNavClick('schedule-pickup')}
+              >
+                Schedule Pickup
               </Button>
             </nav>
           </div>

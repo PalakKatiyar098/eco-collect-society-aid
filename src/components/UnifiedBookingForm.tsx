@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,6 +35,7 @@ interface FormErrors {
   address?: string;
   pincode?: string;
   wasteTypes?: string;
+  date?: string;
 }
 
 interface UnifiedBookingFormProps {
@@ -76,6 +78,11 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
     'Other Medical Waste'
   ];
 
+  // Bangalore PIN codes (first 3 digits: 560)
+  const validateBangalorePincode = (pincode: string): boolean => {
+    return /^560\d{3}$/.test(pincode);
+  };
+
   const wasteOptions = activeTab === 'ewaste' ? ewasteOptions : biomedicalOptions;
 
   const validateForm = (): boolean => {
@@ -89,8 +96,13 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
     }
     if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
     if (!formData.address.trim()) newErrors.address = 'Address is required';
-    if (!formData.pincode.trim()) newErrors.pincode = 'PIN code is required';
+    if (!formData.pincode.trim()) {
+      newErrors.pincode = 'PIN code is required';
+    } else if (!validateBangalorePincode(formData.pincode)) {
+      newErrors.pincode = 'We currently serve only Bangalore. Please enter a valid Bangalore PIN code (560xxx)';
+    }
     if (formData.wasteTypes.length === 0) newErrors.wasteTypes = 'At least one waste type must be selected';
+    if (!formData.date) newErrors.date = 'Pickup date is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -163,9 +175,9 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
         </Button>
         
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Book Your Waste Pickup</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Schedule Your Waste Pickup</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Schedule a convenient pickup time for your waste. Our certified team will 
+            Schedule a convenient pickup time for your waste. Our team will 
             handle everything safely and responsibly.
           </p>
         </div>
@@ -201,7 +213,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                         if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
                       }}
                       placeholder="Enter your full name"
-                      className={cn("mt-1", errors.name && "border-red-500")}
+                      className={cn("mt-1", errors.name && "border-red-500 focus-visible:ring-red-500")}
                     />
                     {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                   </div>
@@ -219,7 +231,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                         if (errors.email) setErrors(prev => ({ ...prev, email: undefined }));
                       }}
                       placeholder="youremail@example.com"
-                      className={cn("mt-1", errors.email && "border-red-500")}
+                      className={cn("mt-1", errors.email && "border-red-500 focus-visible:ring-red-500")}
                     />
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                   </div>
@@ -237,7 +249,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                         if (errors.phone) setErrors(prev => ({ ...prev, phone: undefined }));
                       }}
                       placeholder="+91 9876543210"
-                      className={cn("mt-1", errors.phone && "border-red-500")}
+                      className={cn("mt-1", errors.phone && "border-red-500 focus-visible:ring-red-500")}
                     />
                     {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                   </div>
@@ -256,7 +268,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                         if (errors.address) setErrors(prev => ({ ...prev, address: undefined }));
                       }}
                       placeholder="Flat/House No, Society Name, Area"
-                      className={cn("mt-1", errors.address && "border-red-500")}
+                      className={cn("mt-1", errors.address && "border-red-500 focus-visible:ring-red-500")}
                     />
                     {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
                   </div>
@@ -273,8 +285,8 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                         setFormData(prev => ({ ...prev, pincode: e.target.value }));
                         if (errors.pincode) setErrors(prev => ({ ...prev, pincode: undefined }));
                       }}
-                      placeholder="400001"
-                      className={cn("mt-1", errors.pincode && "border-red-500")}
+                      placeholder="560001"
+                      className={cn("mt-1", errors.pincode && "border-red-500 focus-visible:ring-red-500")}
                     />
                     {errors.pincode && <p className="text-red-500 text-sm mt-1">{errors.pincode}</p>}
                   </div>
@@ -307,7 +319,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
 
                   <div>
                     <Label htmlFor="date" className="block text-sm font-medium text-gray-700">
-                      Preferred Pickup Date
+                      Preferred Pickup Date <span className="text-red-500">*</span>
                     </Label>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -315,7 +327,8 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                           variant={"outline"}
                           className={cn(
                             "w-full justify-start text-left font-normal mt-1",
-                            !formData.date && "text-muted-foreground"
+                            !formData.date && "text-muted-foreground",
+                            errors.date && "border-red-500 focus-visible:ring-red-500"
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
@@ -326,13 +339,17 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                         <CalendarComponent
                           mode="single"
                           selected={formData.date}
-                          onSelect={(date) => setFormData(prev => ({ ...prev, date }))}
+                          onSelect={(date) => {
+                            setFormData(prev => ({ ...prev, date }));
+                            if (errors.date) setErrors(prev => ({ ...prev, date: undefined }));
+                          }}
                           disabled={(date) => date < new Date()}
                           initialFocus
                           className="p-3 pointer-events-auto"
                         />
                       </PopoverContent>
                     </Popover>
+                    {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
                   </div>
 
                   <div>

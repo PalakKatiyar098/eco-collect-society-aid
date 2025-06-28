@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Recycle, Menu, X } from 'lucide-react';
+import { Recycle, Menu, X, User } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import LoginModal from './LoginModal';
+import AccountModal from './AccountModal';
 
 interface HeaderProps {
   activeSection: string;
@@ -11,6 +14,9 @@ interface HeaderProps {
 
 const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -26,6 +32,10 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
       scrollToSection('about-section');
     } else if (action === 'schedule-pickup') {
       onSectionChange('ewaste');
+    } else if (action === 'login') {
+      setIsLoginModalOpen(true);
+    } else if (action === 'account') {
+      setIsAccountModalOpen(true);
     }
     setIsMobileMenuOpen(false);
   };
@@ -36,79 +46,130 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
   ];
 
   return (
-    <header className="bg-white border-b border-neutral-200 sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div 
-            className="flex items-center gap-3 cursor-pointer" 
-            onClick={() => onSectionChange('home')}
-          >
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <Recycle className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">EcoCollect</h1>
-              <p className="text-xs text-gray-500">Society Aid</p>
-            </div>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className="px-4 py-2 rounded-lg font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
-              >
-                {item.label}
-              </button>
-            ))}
-            <Button 
-              className="bg-gray-700 hover:bg-gray-800 text-white"
-              onClick={() => handleNavClick('schedule-pickup')}
+    <>
+      <header className="bg-white border-b border-neutral-200 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <div 
+              className="flex items-center gap-3 cursor-pointer" 
+              onClick={() => onSectionChange('home')}
             >
-              Schedule Pickup
-            </Button>
-          </nav>
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                <Recycle className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">EcoCollect</h1>
+                <p className="text-xs text-gray-500">Society Aid</p>
+              </div>
+            </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6 text-gray-600" />
-            ) : (
-              <Menu className="w-6 h-6 text-gray-600" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-neutral-200">
-            <nav className="flex flex-col space-y-2 pt-4">
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-8">
               {menuItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className="px-4 py-3 rounded-lg text-left font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
+                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
                 >
                   {item.label}
                 </button>
               ))}
-              <Button 
-                className="mt-2 bg-gray-700 hover:bg-gray-800 text-white"
-                onClick={() => handleNavClick('schedule-pickup')}
-              >
-                Schedule Pickup
-              </Button>
+              
+              {isAuthenticated ? (
+                <div className="flex items-center gap-4">
+                  <Button 
+                    className="bg-gray-700 hover:bg-gray-800 text-white"
+                    onClick={() => handleNavClick('schedule-pickup')}
+                  >
+                    Schedule Pickup
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => handleNavClick('account')}
+                  >
+                    <User className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  className="bg-primary hover:bg-primary/90 text-white"
+                  onClick={() => handleNavClick('login')}
+                >
+                  Login
+                </Button>
+              )}
             </nav>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6 text-gray-600" />
+              ) : (
+                <Menu className="w-6 h-6 text-gray-600" />
+              )}
+            </button>
           </div>
-        )}
-      </div>
-    </header>
+
+          {/* Mobile Navigation */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t border-neutral-200">
+              <nav className="flex flex-col space-y-2 pt-4">
+                {menuItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.id)}
+                    className="px-4 py-3 rounded-lg text-left font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                
+                {isAuthenticated ? (
+                  <>
+                    <Button 
+                      className="mt-2 bg-gray-700 hover:bg-gray-800 text-white"
+                      onClick={() => handleNavClick('schedule-pickup')}
+                    >
+                      Schedule Pickup
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="mt-2"
+                      onClick={() => handleNavClick('account')}
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      My Account
+                    </Button>
+                  </>
+                ) : (
+                  <Button 
+                    className="mt-2 bg-primary hover:bg-primary/90 text-white"
+                    onClick={() => handleNavClick('login')}
+                  >
+                    Login
+                  </Button>
+                )}
+              </nav>
+            </div>
+          )}
+        </div>
+      </header>
+
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
+      
+      <AccountModal 
+        isOpen={isAccountModalOpen} 
+        onClose={() => setIsAccountModalOpen(false)} 
+      />
+    </>
   );
 };
 

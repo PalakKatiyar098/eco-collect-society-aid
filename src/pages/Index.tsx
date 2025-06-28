@@ -4,15 +4,27 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Recycle, Syringe, Leaf, Users, Shield, CheckCircle } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/contexts/AuthContext';
 import EWasteBooking from '@/components/EWasteBooking';
 import BiomedicalBooking from '@/components/BiomedicalBooking';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import TrustedPartners from '@/components/TrustedPartners';
+import LoginModal from '@/components/LoginModal';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<'home' | 'ewaste' | 'biomedical' | 'about' | 'education'>('home');
   const [activeInfoTab, setActiveInfoTab] = useState('ewaste');
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
+
+  const handleSelectService = (section: 'ewaste' | 'biomedical') => {
+    if (isAuthenticated) {
+      setActiveSection(section);
+    } else {
+      setIsLoginModalOpen(true);
+    }
+  };
 
   const renderContent = () => {
     switch (activeSection) {
@@ -21,7 +33,7 @@ const Index = () => {
       case 'biomedical':
         return <BiomedicalBooking onBack={() => setActiveSection('home')} />;
       default:
-        return <HomeSection onSelectService={setActiveSection} activeInfoTab={activeInfoTab} setActiveInfoTab={setActiveInfoTab} />;
+        return <HomeSection onSelectService={handleSelectService} activeInfoTab={activeInfoTab} setActiveInfoTab={setActiveInfoTab} />;
     }
   };
 
@@ -30,6 +42,10 @@ const Index = () => {
       <Header activeSection={activeSection} onSectionChange={setActiveSection} />
       {renderContent()}
       <Footer />
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </div>
   );
 };
@@ -48,11 +64,12 @@ const HomeSection = ({
       {/* Hero Section */}
       <div className="text-center space-y-6 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-          Responsible Waste Collection
-          <span className="block text-primary">for Your Society</span>
+          Smart Waste Collection
+          <span className="block text-primary">for Modern Societies</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-          Safe, convenient, and eco-friendly waste collection for your apartment complex. Choose your waste type and schedule a pickup in minutes.
+          Safe, convenient, and eco-friendly waste collection for your apartment complex. 
+          Choose your waste type and schedule a pickup in minutes.
         </p>
         <div className="flex items-center justify-center gap-2 text-primary">
           <Recycle className="w-5 h-5" />
@@ -125,7 +142,7 @@ const HomeSection = ({
       </div>
 
       {/* Info Section */}
-      <div id="education-section" className="rounded-xl pt-8">
+      <div id="education-section" className="pt-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Learn About Responsible Waste Disposal</h2>
           <p className="text-gray-600 max-w-3xl mx-auto">

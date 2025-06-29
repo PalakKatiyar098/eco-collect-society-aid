@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Recycle, Syringe, Leaf, Users, Shield, CheckCircle } from 'lucide-react';
+import { Recycle, Syringe, Leaf, Users, Shield, CheckCircle, Award } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import EWasteBooking from '@/components/EWasteBooking';
@@ -10,10 +11,13 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import TrustedPartners from '@/components/TrustedPartners';
 import LoginModal from '@/components/LoginModal';
+import AccountDetailsPage from '@/pages/AccountDetailsPage';
+import PickupsPage from '@/pages/PickupsPage';
 
 const Index = () => {
-  const [activeSection, setActiveSection] = useState<'home' | 'ewaste' | 'biomedical' | 'about' | 'education'>('home');
+  const [activeSection, setActiveSection] = useState<'home' | 'ewaste' | 'biomedical' | 'about' | 'education' | 'account-details' | 'pickups'>('home');
   const [activeInfoTab, setActiveInfoTab] = useState('ewaste');
+  const [pickupsTab, setPickupsTab] = useState<'scheduled' | 'past'>('scheduled');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { isAuthenticated } = useAuth();
 
@@ -25,12 +29,25 @@ const Index = () => {
     }
   };
 
+  const handleAccountNavigation = (view: 'profile' | 'ongoing' | 'history') => {
+    if (view === 'profile') {
+      setActiveSection('account-details');
+    } else {
+      setPickupsTab(view === 'ongoing' ? 'scheduled' : 'past');
+      setActiveSection('pickups');
+    }
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case 'ewaste':
-        return <EWasteBooking onBack={() => setActiveSection('home')} />;
+        return <EWasteBooking onBack={() => setActiveSection('home')} onEditProfile={() => setActiveSection('account-details')} />;
       case 'biomedical':
-        return <BiomedicalBooking onBack={() => setActiveSection('home')} />;
+        return <BiomedicalBooking onBack={() => setActiveSection('home')} onEditProfile={() => setActiveSection('account-details')} />;
+      case 'account-details':
+        return <AccountDetailsPage onBack={() => setActiveSection('home')} />;
+      case 'pickups':
+        return <PickupsPage onBack={() => setActiveSection('home')} defaultTab={pickupsTab} />;
       default:
         return <HomeSection onSelectService={handleSelectService} activeInfoTab={activeInfoTab} setActiveInfoTab={setActiveInfoTab} />;
     }
@@ -38,7 +55,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header activeSection={activeSection} onSectionChange={setActiveSection} />
+      <Header 
+        activeSection={activeSection} 
+        onSectionChange={setActiveSection}
+        onAccountNavigation={handleAccountNavigation}
+      />
       {renderContent()}
       <Footer />
       <LoginModal 
@@ -64,13 +85,14 @@ const HomeSection = ({
       <div className="text-center space-y-6 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
           Responsible Waste
-          <span className="block text-primary">Pickup Service</span>
+          <span className="block text-primary">Collection Service</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
           Safe, convenient, and eco-friendly waste collection for your society. Choose 
           your waste type and book a pickup in minutes.
         </p>
         <div className="flex items-center justify-center gap-2 text-primary">
+          <Award className="w-4 h-4" />
           <span className="text-sm font-medium">Certified • Secure • Sustainable</span>
         </div>
       </div>

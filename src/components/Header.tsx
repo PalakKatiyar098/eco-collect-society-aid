@@ -1,23 +1,20 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Recycle, Menu, X, User } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginModal from './LoginModal';
-import AccountModal from './AccountModal';
 import AccountSidebar from './AccountSidebar';
 
 interface HeaderProps {
   activeSection: string;
   onSectionChange: (section: 'home' | 'ewaste' | 'biomedical' | 'about' | 'education') => void;
+  onAccountNavigation?: (view: 'profile' | 'ongoing' | 'history') => void;
 }
 
-const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
+const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-  const [accountView, setAccountView] = useState<'profile' | 'ongoing' | 'history'>('profile');
   const { isAuthenticated } = useAuth();
 
   const scrollToSection = (sectionId: string) => {
@@ -41,8 +38,9 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
   };
 
   const handleAccountNavigation = (view: 'profile' | 'ongoing' | 'history') => {
-    setAccountView(view);
-    setIsAccountModalOpen(true);
+    if (onAccountNavigation) {
+      onAccountNavigation(view);
+    }
   };
 
   const menuItems = [
@@ -172,12 +170,6 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
-      />
-      
-      <AccountModal 
-        isOpen={isAccountModalOpen} 
-        onClose={() => setIsAccountModalOpen(false)}
-        defaultView={accountView}
       />
     </>
   );

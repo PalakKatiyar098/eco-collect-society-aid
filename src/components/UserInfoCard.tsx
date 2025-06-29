@@ -41,7 +41,7 @@ const UserInfoCard = ({ onEdit }: UserInfoCardProps) => {
               </div>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={onEdit}>
+          <Button variant="outline" size="sm" onClick={onEdit} className="hover:bg-gray-100">
             <Edit3 className="w-3 h-3 mr-1" />
             Edit
           </Button>

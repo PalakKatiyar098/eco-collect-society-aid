@@ -126,7 +126,7 @@ const AccountDetails = () => {
         <Button 
           onClick={handleSave} 
           disabled={!hasChanges}
-          className="w-full"
+          className="w-full bg-gray-700 hover:bg-gray-800 disabled:bg-gray-300"
         >
           Save Changes
         </Button>

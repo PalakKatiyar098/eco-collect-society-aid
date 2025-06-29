@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -64,16 +63,15 @@ const HomeSection = ({
       {/* Hero Section */}
       <div className="text-center space-y-6 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-          Smart Waste Collection
-          <span className="block text-primary">for Modern Societies</span>
+          Responsible Waste
+          <span className="block text-primary">Pickup Service</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-          Safe, convenient, and eco-friendly waste collection for your apartment complex. 
-          Choose your waste type and schedule a pickup in minutes.
+          Safe, convenient, and eco-friendly waste collection for your society. Choose 
+          your waste type and book a pickup in minutes.
         </p>
         <div className="flex items-center justify-center gap-2 text-primary">
-          <Recycle className="w-5 h-5" />
-          <span className="text-sm font-medium">Convenient • Safe • Responsible</span>
+          <span className="text-sm font-medium">Certified • Secure • Sustainable</span>
         </div>
       </div>
 

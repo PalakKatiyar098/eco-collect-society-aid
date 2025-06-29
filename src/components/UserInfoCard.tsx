@@ -15,7 +15,7 @@ const UserInfoCard = ({ onEdit }: UserInfoCardProps) => {
   if (!user) return null;
 
   return (
-    <Card className="mb-6 bg-blue-50 border-blue-200">
+    <Card className="mb-6 bg-gray-50 border-gray-200">
       <CardContent className="p-6">
         <div className="flex justify-between items-start">
           <div className="space-y-3">

@@ -15,7 +15,7 @@ const SuccessModal = ({ isOpen, onClose, type }: SuccessModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full text-center">
+      <DialogContent className="max-w-md mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full text-center rounded-xl">
         <div className="space-y-6 py-4">
           {/* Success Icon */}
           <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">

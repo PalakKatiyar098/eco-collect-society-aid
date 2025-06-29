@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,7 @@ interface AccountModalProps {
 
 const AccountModal = ({ isOpen, onClose, defaultView = 'profile' }: AccountModalProps) => {
   const { user, updateUser, logout } = useAuth();
-  const [activeTab, setActiveTab] = useState(defaultView);
+  const [activeTab, setActiveTab] = useState<'profile' | 'ongoing' | 'history'>(defaultView);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
@@ -31,6 +30,10 @@ const AccountModal = ({ isOpen, onClose, defaultView = 'profile' }: AccountModal
   useEffect(() => {
     setActiveTab(defaultView);
   }, [defaultView]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value as 'profile' | 'ongoing' | 'history');
+  };
 
   const validateBangalorePincode = (pincode: string): boolean => {
     return /^560\d{3}$/.test(pincode);
@@ -120,7 +123,7 @@ const AccountModal = ({ isOpen, onClose, defaultView = 'profile' }: AccountModal
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="profile">Profile</TabsTrigger>
             <TabsTrigger value="ongoing">Scheduled</TabsTrigger>

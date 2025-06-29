@@ -1,416 +1,356 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Recycle, Syringe, Leaf, Users, Shield, CheckCircle, Award } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/contexts/AuthContext';
-import EWasteBooking from '@/components/EWasteBooking';
-import BiomedicalBooking from '@/components/BiomedicalBooking';
+import { CheckCircle, Recycle, Heart, Shield, Users, Leaf, Award, ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import UnifiedBookingForm from '@/components/UnifiedBookingForm';
+import AccountDetailsPage from './AccountDetailsPage';
+import PickupsPage from './PickupsPage';
+import ImpactStats from '@/components/ImpactStats';
 import TrustedPartners from '@/components/TrustedPartners';
-import LoginModal from '@/components/LoginModal';
-import AccountDetailsPage from '@/pages/AccountDetailsPage';
-import PickupsPage from '@/pages/PickupsPage';
+
+type Section = 'home' | 'ewaste' | 'biomedical' | 'about' | 'education' | 'account-details' | 'pickups';
 
 const Index = () => {
-  const [activeSection, setActiveSection] = useState<'home' | 'ewaste' | 'biomedical' | 'about' | 'education' | 'account-details' | 'pickups'>('home');
-  const [activeInfoTab, setActiveInfoTab] = useState('ewaste');
-  const [pickupsTab, setPickupsTab] = useState<'scheduled' | 'past'>('scheduled');
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
-
-  const handleSelectService = (section: 'ewaste' | 'biomedical') => {
-    if (isAuthenticated) {
-      setActiveSection(section);
-    } else {
-      setIsLoginModalOpen(true);
-    }
-  };
-
-  const handleAccountNavigation = (view: 'profile' | 'ongoing' | 'history') => {
-    if (view === 'profile') {
-      setActiveSection('account-details');
-    } else {
-      setPickupsTab(view === 'ongoing' ? 'scheduled' : 'past');
-      setActiveSection('pickups');
-    }
-  };
+  const [activeSection, setActiveSection] = useState<Section>('home');
 
   const renderContent = () => {
     switch (activeSection) {
       case 'ewaste':
-        return <EWasteBooking onBack={() => setActiveSection('home')} />;
+        return <UnifiedBookingForm onBack={() => setActiveSection('home')} onAccountDetails={() => setActiveSection('account-details')} defaultTab="ewaste" />;
       case 'biomedical':
-        return <BiomedicalBooking onBack={() => setActiveSection('home')} />;
+        return <UnifiedBookingForm onBack={() => setActiveSection('home')} onAccountDetails={() => setActiveSection('account-details')} defaultTab="biomedical" />;
       case 'account-details':
         return <AccountDetailsPage onBack={() => setActiveSection('home')} />;
       case 'pickups':
-        return <PickupsPage onBack={() => setActiveSection('home')} defaultTab={pickupsTab} />;
+        return <PickupsPage onBack={() => setActiveSection('home')} />;
       default:
-        return <HomeSection onSelectService={handleSelectService} activeInfoTab={activeInfoTab} setActiveInfoTab={setActiveInfoTab} />;
+        return <HomePage onSectionChange={setActiveSection} />;
     }
   };
 
+  return renderContent();
+};
+
+const HomePage = ({ onSectionChange }: { onSectionChange: (section: Section) => void }) => {
   return (
     <div className="min-h-screen bg-white">
       <Header 
-        activeSection={activeSection} 
-        onSectionChange={setActiveSection}
-        onAccountNavigation={handleAccountNavigation}
+        activeSection="home" 
+        onSectionChange={onSectionChange}
+        onAccountNavigation={(view) => {
+          if (view === 'profile') {
+            onSectionChange('account-details');
+          } else {
+            onSectionChange('pickups');
+          }
+        }}
       />
-      {renderContent()}
-      <Footer />
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onClose={() => setIsLoginModalOpen(false)} 
-      />
-    </div>
-  );
-};
-
-const HomeSection = ({ 
-  onSelectService, 
-  activeInfoTab, 
-  setActiveInfoTab 
-}: { 
-  onSelectService: (section: 'ewaste' | 'biomedical') => void;
-  activeInfoTab: string;
-  setActiveInfoTab: (tab: string) => void;
-}) => {
-  return (
-    <div className="container mx-auto px-4 py-12 space-y-16">
+      
       {/* Hero Section */}
-      <div className="text-center space-y-6 max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-          Responsible Waste
-          <span className="block text-primary">Collection Service</span>
-        </h1>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-          Safe, convenient, and eco-friendly waste collection for your society. Choose 
-          your waste type and book a pickup in minutes.
-        </p>
-        <div className="flex items-center justify-center gap-2 text-primary">
-          <Award className="w-4 h-4" />
-          <span className="text-sm font-medium">Certified • Secure • Sustainable</span>
-        </div>
-      </div>
-
-      {/* Service Selection Cards */}
-      <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <Card className="service-card group cursor-pointer hover:border-blue-300" onClick={() => onSelectService('ewaste')}>
-          <CardContent className="p-8 text-center space-y-6">
-            <div className="w-16 h-16 mx-auto bg-blue-100 rounded-lg flex items-center justify-center">
-              <Recycle className="w-8 h-8 text-blue-600" />
-            </div>
-            <div className="space-y-3">
-              <h3 className="text-xl font-semibold text-gray-900">E-Waste Collection</h3>
-              <p className="text-gray-600">
-                Phones, laptops, batteries, cables and other electronic items. 
-                Free pickup service for your society.
-              </p>
-            </div>
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-              Schedule E-Waste Pickup
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="service-card group cursor-pointer hover:border-green-300" onClick={() => onSelectService('biomedical')}>
-          <CardContent className="p-8 text-center space-y-6">
-            <div className="w-16 h-16 mx-auto bg-green-100 rounded-lg flex items-center justify-center">
-              <Syringe className="w-8 h-8 text-green-600" />
-            </div>
-            <div className="space-y-3">
-              <h3 className="text-xl font-semibold text-gray-900">Biomedical Waste</h3>
-              <p className="text-gray-600">
-                Syringes, needles, expired medications and medical supplies. 
-                Safe disposal with proper documentation.
-              </p>
-            </div>
-            <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
-              Schedule Biomedical Pickup
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Features */}
-      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
-            <Leaf className="w-6 h-6 text-primary" />
-          </div>
-          <h3 className="font-semibold text-gray-900">Eco-Friendly</h3>
-          <p className="text-sm text-gray-600">Sustainable disposal methods that protect our environment</p>
-        </div>
-        <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
-            <Users className="w-6 h-6 text-primary" />
-          </div>
-          <h3 className="font-semibold text-gray-900">Community Focused</h3>
-          <p className="text-sm text-gray-600">Serving residential societies and apartment complexes</p>
-        </div>
-        <div className="text-center space-y-4">
-          <div className="w-12 h-12 mx-auto bg-primary/10 rounded-lg flex items-center justify-center">
-            <Shield className="w-6 h-6 text-primary" />
-          </div>
-          <h3 className="font-semibold text-gray-900">Safe & Secure</h3>
-          <p className="text-sm text-gray-600">Trained professionals with proper safety equipment</p>
-        </div>
-      </div>
-
-      {/* Info Section */}
-      <div id="education-section" className="pt-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Learn About Responsible Waste Disposal</h2>
-          <p className="text-gray-600 max-w-3xl mx-auto">
-            Understanding proper waste disposal is crucial for environmental protection and 
-            community health. Learn about the different types of waste and why proper handling matters.
-          </p>
-        </div>
-
-        <Tabs value={activeInfoTab} onValueChange={setActiveInfoTab} className="w-full max-w-6xl mx-auto">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8 h-12 bg-muted">
-            <TabsTrigger 
-              value="ewaste" 
-              className="text-base py-3 data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-            >
-              E-Waste
-            </TabsTrigger>
-            <TabsTrigger 
-              value="biomedical" 
-              className="text-base py-3 data-[state=active]:bg-green-500 data-[state=active]:text-white"
-            >
-              Biomedical Waste
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="ewaste" className="space-y-8">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <div className="bg-blue-50 rounded-lg p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Recycle className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900">What is E-Waste?</h3>
-                  </div>
-                  <p className="text-gray-600 mb-4">
-                    Electronic waste (e-waste) refers to discarded electrical or electronic devices. 
-                    These items contain valuable materials that can be recycled and hazardous substances 
-                    that need proper handling.
-                  </p>
-                  <div className="space-y-2">
-                    <h4 className="font-medium text-gray-900">Common E-Waste Items:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-                      <li>Mobile phones and tablets</li>
-                      <li>Computers and laptops</li>
-                      <li>TVs and monitors</li>
-                      <li>Kitchen appliances</li>
-                      <li>Batteries and chargers</li>
-                      <li>Printers and scanners</li>
-                    </ul>
-                  </div>
-                </div>
-                
-                <div className="bg-blue-50 rounded-lg p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Shield className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900">Why Proper Disposal Matters</h3>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-2">The Problem</h4>
-                      <p className="text-sm text-gray-600">
-                        Most of our waste ends up in landfills or gets informally handled, risking toxic exposure and pollution.
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-2">The Better Way</h4>
-                      <p className="text-sm text-gray-600">
-                        We collect your waste responsibly and send it where it's meant to go—for recycling, recovery or safe disposal.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white border-2 border-blue-200 rounded-xl p-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Did You Know?</h3>
-                <div className="grid md:grid-cols-3 gap-6 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-blue-600">15kg</div>
-                    <p className="text-sm text-gray-700">average e-waste generated per household annually</p>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-blue-600">80%</div>
-                    <p className="text-sm text-gray-700">of society residents are unaware of proper e-waste disposal</p>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-blue-600">500+</div>
-                    <p className="text-sm text-gray-700">families can be served by one organized collection drive</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="biomedical" className="space-y-8">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <div className="bg-green-50 rounded-lg p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                      <Syringe className="w-4 h-4 text-green-600" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900">What is Biomedical Waste?</h3>
-                  </div>
-                  <p className="text-gray-600 mb-4">
-                    Biomedical waste from households includes any waste that contains potentially 
-                    infectious material or medical supplies used for personal care and treatment.
-                  </p>
-                  <div className="space-y-2">
-                    <h4 className="font-medium text-gray-900">Items We Collect:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-                      <li>Used syringes and needles (diabetes care)</li>
-                      <li>Expired medications</li>
-                      <li>Blood glucose test strips</li>
-                      <li>Used medical gloves and masks</li>
-                      <li>Bandages and gauze</li>
-                      <li>Home medical equipment</li>
-                    </ul>
-                  </div>
-                </div>
-                
-                <div className="bg-green-50 rounded-lg p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                      <Shield className="w-4 h-4 text-red-600" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900">Why Proper Disposal Matters</h3>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-2">The Problem</h4>
-                      <p className="text-sm text-gray-600">
-                        Most of our waste ends up in landfills or gets informally handled, risking toxic exposure and pollution.
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-2">The Better Way</h4>
-                      <p className="text-sm text-gray-600">
-                        We collect your waste responsibly and send it where it's meant to go—for recycling, recovery or safe disposal.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white border-2 border-green-200 rounded-xl p-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Did You Know?</h3>
-                <div className="grid md:grid-cols-3 gap-6 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-green-600">1 in 4</div>
-                    <p className="text-sm text-gray-700">households have diabetic family members generating medical waste</p>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-green-600">200+</div>
-                    <p className="text-sm text-gray-700">syringes used annually by an average diabetic household</p>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-green-600">90%</div>
-                    <p className="text-sm text-gray-700">of families dispose medical waste incorrectly at home</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* About Section */}
-      <div id="about-section" className="bg-white py-16">
+      <section className="bg-gradient-to-br from-neutral-50 to-white py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">About EcoCollect</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto">
-              We're committed to making waste disposal convenient, safe, and environmentally 
-              responsible for residential societies across Bangalore.
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+              Responsible Waste Collection for
+              <span className="text-primary block">Modern Societies</span>
+            </h1>
+            
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              Professional e-waste and biomedical waste management services. 
+              Safe, certified, and convenient pickup from your doorstep.
+            </p>
+
+            <div className="flex items-center justify-center gap-8 mb-8 text-sm text-gray-600">
+              <div className="flex items-center gap-2">
+                <Recycle className="w-4 h-4 text-primary" />
+                <span>Certified</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-primary" />
+                <span>Secure</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Leaf className="w-4 h-4 text-primary" />
+                <span>Sustainable</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg"
+                className="bg-gray-700 hover:bg-gray-800 text-white px-8 py-4 text-lg"
+                onClick={() => onSectionChange('ewaste')}
+              >
+                Schedule E-Waste Pickup
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="px-8 py-4 text-lg border-gray-300 text-gray-700 hover:bg-gray-50"
+                onClick={() => onSectionChange('biomedical')}
+              >
+                Biomedical Waste Pickup
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20 bg-neutral-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Comprehensive Waste Management
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Professional collection and disposal services for both electronic and biomedical waste,
+              ensuring environmental safety and regulatory compliance.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-16 items-start mb-16 max-w-6xl mx-auto">
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-gray-900">Our Mission</h3>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <Card className="service-card group cursor-pointer" onClick={() => onSectionChange('ewaste')}>
+              <CardContent className="p-8">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-200 transition-colors">
+                  <Recycle className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">E-Waste Collection</h3>
+                <p className="text-gray-600 mb-6">
+                  Responsible disposal of electronic devices, computers, phones, and other digital equipment.
+                  Certified data destruction and component recycling.
+                </p>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                    Computers & Laptops
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                    Mobile Devices & Tablets
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                    Home Appliances
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                    Batteries & Components
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="service-card group cursor-pointer" onClick={() => onSectionChange('biomedical')}>
+              <CardContent className="p-8">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6 group-hover:bg-green-200 transition-colors">
+                  <Heart className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">Biomedical Waste</h3>
+                <p className="text-gray-600 mb-6">
+                  Safe collection and disposal of medical waste from homes, clinics, and healthcare facilities.
+                  Compliant with all safety regulations.
+                </p>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                    Sharps & Needles
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                    Expired Medications
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                    Contaminated Materials
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+                    Medical Equipment
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Stats */}
+      <ImpactStats />
+
+      {/* How It Works */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Simple, efficient process to get your waste collected safely and responsibly.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="process-step">
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+                1
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Schedule Pickup</h3>
               <p className="text-gray-600">
-                EcoCollect was founded with a simple yet powerful mission: to bridge the gap 
-                between residential communities and proper waste management services. We 
-                believe that every household should have access to safe, convenient, and 
-                environmentally responsible waste disposal options.
+                Book your waste collection online or through our app. Choose your preferred date and time slot.
               </p>
+            </div>
+
+            <div className="process-step">
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+                2
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Prepare Items</h3>
+              <p className="text-gray-600">
+                Safely pack your waste items following our guidelines. We'll provide containers for biomedical waste.
+              </p>
+            </div>
+
+            <div className="process-step">
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+                3
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Safe Collection</h3>
+              <p className="text-gray-600">
+                Our certified team collects your waste and provides you with a collection certificate.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Education Section */}
+      <section id="education-section" className="py-20 bg-neutral-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Why Proper Waste Disposal Matters
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Understanding the impact of responsible waste management on our environment and community health.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="bg-white border-0 shadow-sm">
+              <CardContent className="p-6">
+                <Shield className="w-12 h-12 text-blue-600 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Environmental Protection</h3>
+                <p className="text-gray-600 text-sm">
+                  Proper e-waste disposal prevents toxic materials from contaminating soil and groundwater, 
+                  protecting our ecosystem for future generations.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white border-0 shadow-sm">
+              <CardContent className="p-6">
+                <Heart className="w-12 h-12 text-green-600 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Health & Safety</h3>
+                <p className="text-gray-600 text-sm">
+                  Biomedical waste contains pathogens and chemicals that can cause serious health risks 
+                  if not handled by trained professionals.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white border-0 shadow-sm">
+              <CardContent className="p-6">
+                <Recycle className="w-12 h-12 text-primary mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Resource Recovery</h3>
+                <p className="text-gray-600 text-sm">
+                  Electronic devices contain valuable materials like gold, silver, and rare earth elements 
+                  that can be recovered and reused.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Trusted Partners */}
+      <TrustedPartners />
+
+      {/* About Section */}
+      <section id="about-section" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+              About EcoCollect Society Aid
+            </h2>
+            
+            <p className="text-lg text-gray-600 mb-8">
+              We are a certified waste management company specializing in the safe collection and disposal 
+              of electronic and biomedical waste. Our mission is to make responsible waste disposal 
+              accessible and convenient for residential societies and healthcare facilities.
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-8 mt-12">
+              <div className="text-center">
+                <Award className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Certified & Licensed</h3>
+                <p className="text-gray-600 text-sm">
+                  All our operations are certified by environmental authorities and comply with national regulations.
+                </p>
+              </div>
               
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
-                    <Users className="w-4 h-4 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Community First</h4>
-                    <p className="text-sm text-gray-600">We prioritize the health and convenience of residential communities</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
-                    <Shield className="w-4 h-4 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Safety & Compliance</h4>
-                    <p className="text-sm text-gray-600">All operations follow strict safety protocols and regulatory standards</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center mt-1">
-                    <Leaf className="w-4 h-4 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Environmental Impact</h4>
-                    <p className="text-sm text-gray-600">Committed to reducing environmental footprint through proper recycling</p>
-                  </div>
-                </div>
+              <div className="text-center">
+                <Users className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Experienced Team</h3>
+                <p className="text-gray-600 text-sm">
+                  Our trained professionals have years of experience in safe waste handling and disposal.
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <Shield className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Safety First</h3>
+                <p className="text-gray-600 text-sm">
+                  We follow strict safety protocols to ensure the wellbeing of our team and your community.
+                </p>
               </div>
             </div>
-            
-            <div className="bg-neutral-50 rounded-xl p-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Why Choose EcoCollect?</h3>
-              <div className="space-y-4">
+
+            <div className="mt-16 p-8 bg-neutral-50 rounded-2xl">
+              <h3 className="text-2xl font-semibold text-gray-900 mb-6">Get In Touch</h3>
+              <div className="grid md:grid-cols-3 gap-6 text-left">
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-700">Licensed waste handlers</span>
+                  <Phone className="w-5 h-5 text-primary" />
+                  <div>
+                    <p className="font-medium text-gray-900">Phone</p>
+                    <p className="text-gray-600">+91 98765 43210</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-700">Convenient doorstep collection</span>
+                  <Mail className="w-5 h-5 text-primary" />
+                  <div>
+                    <p className="font-medium text-gray-900">Email</p>
+                    <p className="text-gray-600">help@ecocollect.org</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-700">Environmentally responsible disposal</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary" />
-                  <span className="text-gray-700">Proper documentation and compliance</span>
+                  <MapPin className="w-5 h-5 text-primary" />
+                  <div>
+                    <p className="font-medium text-gray-900">Service Area</p>
+                    <p className="text-gray-600">Bangalore, Karnataka</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <TrustedPartners />
         </div>
-      </div>
+      </section>
+
+      <Footer />
     </div>
   );
 };

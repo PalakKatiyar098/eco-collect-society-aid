@@ -2,8 +2,8 @@
 import React from 'react';
 import UnifiedBookingForm from './UnifiedBookingForm';
 
-const EWasteBooking = ({ onBack }: { onBack: () => void }) => {
-  return <UnifiedBookingForm onBack={onBack} defaultTab="ewaste" />;
+const EWasteBooking = ({ onBack, onAccountDetails }: { onBack: () => void; onAccountDetails: () => void }) => {
+  return <UnifiedBookingForm onBack={onBack} onAccountDetails={onAccountDetails} defaultTab="ewaste" />;
 };
 
 export default EWasteBooking;

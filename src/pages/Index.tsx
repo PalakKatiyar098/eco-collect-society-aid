@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -41,9 +40,9 @@ const Index = () => {
   const renderContent = () => {
     switch (activeSection) {
       case 'ewaste':
-        return <EWasteBooking onBack={() => setActiveSection('home')} onEditProfile={() => setActiveSection('account-details')} />;
+        return <EWasteBooking onBack={() => setActiveSection('home')} />;
       case 'biomedical':
-        return <BiomedicalBooking onBack={() => setActiveSection('home')} onEditProfile={() => setActiveSection('account-details')} />;
+        return <BiomedicalBooking onBack={() => setActiveSection('home')} />;
       case 'account-details':
         return <AccountDetailsPage onBack={() => setActiveSection('home')} />;
       case 'pickups':

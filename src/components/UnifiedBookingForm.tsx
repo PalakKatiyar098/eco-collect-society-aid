@@ -81,8 +81,12 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (formData.wasteTypes.length === 0) newErrors.wasteTypes = 'At least one waste type must be selected';
-    if (!formData.date) newErrors.date = 'Pickup date is required';
+    if (formData.wasteTypes.length === 0) {
+      newErrors.wasteTypes = 'At least one waste type must be selected';
+    }
+    if (!formData.date) {
+      newErrors.date = 'Pickup date is required';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -107,7 +111,6 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
 
   const handleSuccessModalClose = () => {
     setSuccessModalOpen(false);
-    // Reset form to empty state
     setFormData({
       wasteTypes: [],
       additionalNotes: '',
@@ -146,11 +149,10 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
 
   const currentColor = activeTab === 'ewaste' ? 'blue' : 'green';
 
-  // Prepare combined data for confirmation modal
   const combinedFormData = {
     ...formData,
     name: user?.name || '',
-    email: '', // Not collected during registration
+    email: '',
     phone: user?.phone || '',
     address: user?.address || '',
     pincode: user?.pincode || '',
@@ -177,9 +179,6 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
             <div className="lg:col-span-2">
               <Card className="bg-white border-0 shadow-sm">
                 <CardContent className="p-8">
-                  {/* User Info Card */}
-                  <UserInfoCard onEdit={() => setAccountModalOpen(true)} />
-
                   <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full mb-6">
                     <TabsList className="grid w-full grid-cols-2 mb-6">
                       <TabsTrigger value="ewaste" className="flex items-center gap-2">
@@ -192,6 +191,9 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                       </TabsTrigger>
                     </TabsList>
                   </Tabs>
+
+                  {/* User Info Card moved below tabs */}
+                  <UserInfoCard onEdit={() => setAccountModalOpen(true)} />
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>

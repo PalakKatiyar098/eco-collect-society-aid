@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,10 +14,12 @@ import { cn } from '@/lib/utils';
 interface AccountModalProps {
   isOpen: boolean;
   onClose: () => void;
+  defaultView?: 'profile' | 'ongoing' | 'history';
 }
 
-const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
+const AccountModal = ({ isOpen, onClose, defaultView = 'profile' }: AccountModalProps) => {
   const { user, updateUser, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState(defaultView);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
@@ -26,6 +28,10 @@ const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+  useEffect(() => {
+    setActiveTab(defaultView);
+  }, [defaultView]);
+
   const validateBangalorePincode = (pincode: string): boolean => {
     return /^560\d{3}$/.test(pincode);
   };
@@ -33,8 +39,12 @@ const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
   const handleSaveProfile = () => {
     const newErrors: { [key: string]: string } = {};
     
-    if (!editForm.name.trim()) newErrors.name = 'Name is required';
-    if (!editForm.address.trim()) newErrors.address = 'Address is required';
+    if (!editForm.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    if (!editForm.address.trim()) {
+      newErrors.address = 'Address is required';
+    }
     if (!editForm.pincode.trim()) {
       newErrors.pincode = 'PIN code is required';
     } else if (!validateBangalorePincode(editForm.pincode)) {
@@ -72,7 +82,7 @@ const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
       id: '1',
       type: 'E-Waste',
       items: ['Mobile Phones', 'Batteries'],
-      status: 'Confirmed',
+      status: 'In Progress',
       date: '2024-01-15',
       color: 'blue'
     }
@@ -99,7 +109,7 @@ const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full rounded-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             My Account
@@ -110,11 +120,11 @@ const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="profile" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="ongoing">Ongoing</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
+            <TabsTrigger value="ongoing">Scheduled</TabsTrigger>
+            <TabsTrigger value="history">Past</TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile" className="space-y-6">

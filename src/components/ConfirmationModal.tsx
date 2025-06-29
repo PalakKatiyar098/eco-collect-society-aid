@@ -3,7 +3,7 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Edit3, MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Phone, Mail } from 'lucide-react';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -18,14 +18,10 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }: Confirmat
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full p-6 sm:p-8">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full p-8 rounded-xl">
+        <DialogHeader className="text-left">
+          <DialogTitle>
             Confirm Booking Details
-            <Button variant="ghost" size="sm" onClick={onClose} className="ml-auto">
-              <Edit3 className="w-4 h-4" />
-              Edit
-            </Button>
           </DialogTitle>
           <DialogDescription>
             Please review your booking details before confirming
@@ -87,7 +83,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }: Confirmat
           {isEWaste && data.images?.length > 0 && (
             <div>
               <h3 className="font-semibold mb-3">Uploaded Images</h3>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {data.images.map((image: File, index: number) => (
                   <img
                     key={index}
@@ -124,7 +120,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, data, type }: Confirmat
           )}
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pt-4">
+          <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <Button variant="outline" onClick={onClose} className="flex-1">
               Edit Details
             </Button>

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginModal from './LoginModal';
 import AccountModal from './AccountModal';
+import AccountSidebar from './AccountSidebar';
 
 interface HeaderProps {
   activeSection: string;
@@ -16,6 +17,7 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [accountView, setAccountView] = useState<'profile' | 'ongoing' | 'history'>('profile');
   const { isAuthenticated } = useAuth();
 
   const scrollToSection = (sectionId: string) => {
@@ -34,10 +36,13 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
       onSectionChange('ewaste');
     } else if (action === 'login') {
       setIsLoginModalOpen(true);
-    } else if (action === 'account') {
-      setIsAccountModalOpen(true);
     }
     setIsMobileMenuOpen(false);
+  };
+
+  const handleAccountNavigation = (view: 'profile' | 'ongoing' | 'history') => {
+    setAccountView(view);
+    setIsAccountModalOpen(true);
   };
 
   const menuItems = [
@@ -84,17 +89,19 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
                   >
                     Schedule Pickup
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleNavClick('account')}
+                  <AccountSidebar
+                    onAccountDetails={() => handleAccountNavigation('profile')}
+                    onScheduledPickups={() => handleAccountNavigation('ongoing')}
+                    onPastPickups={() => handleAccountNavigation('history')}
                   >
-                    <User className="w-4 h-4" />
-                  </Button>
+                    <Button variant="outline" size="icon">
+                      <User className="w-4 h-4" />
+                    </Button>
+                  </AccountSidebar>
                 </div>
               ) : (
                 <Button 
-                  className="bg-primary hover:bg-primary/90 text-white"
+                  className="bg-gray-700 hover:bg-gray-800 text-white"
                   onClick={() => handleNavClick('login')}
                 >
                   Login
@@ -137,18 +144,20 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
                     >
                       Schedule Pickup
                     </Button>
-                    <Button
-                      variant="outline"
-                      className="mt-2"
-                      onClick={() => handleNavClick('account')}
+                    <AccountSidebar
+                      onAccountDetails={() => handleAccountNavigation('profile')}
+                      onScheduledPickups={() => handleAccountNavigation('ongoing')}
+                      onPastPickups={() => handleAccountNavigation('history')}
                     >
-                      <User className="w-4 h-4 mr-2" />
-                      My Account
-                    </Button>
+                      <Button variant="outline" className="mt-2 w-full">
+                        <User className="w-4 h-4 mr-2" />
+                        My Account
+                      </Button>
+                    </AccountSidebar>
                   </>
                 ) : (
                   <Button 
-                    className="mt-2 bg-primary hover:bg-primary/90 text-white"
+                    className="mt-2 bg-gray-700 hover:bg-gray-800 text-white"
                     onClick={() => handleNavClick('login')}
                   >
                     Login
@@ -167,7 +176,8 @@ const Header = ({ activeSection, onSectionChange }: HeaderProps) => {
       
       <AccountModal 
         isOpen={isAccountModalOpen} 
-        onClose={() => setIsAccountModalOpen(false)} 
+        onClose={() => setIsAccountModalOpen(false)}
+        defaultView={accountView}
       />
     </>
   );

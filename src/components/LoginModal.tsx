@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -21,9 +20,9 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
+  const [addressLine1, setAddressLine1] = useState('');
+  const [addressLine2, setAddressLine2] = useState('');
   const [pincode, setPincode] = useState('');
-  const [isRegistering, setIsRegistering] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const { login } = useAuth();
 
@@ -36,7 +35,6 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       setErrors({ phone: 'Phone number is required' });
       return;
     }
-    // Simulate OTP sending
     console.log('Sending OTP to:', phone);
     setStep('otp');
     setErrors({});
@@ -48,14 +46,13 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       return;
     }
     
-    // Simulate OTP verification
     console.log('Verifying OTP:', otp);
     
-    // Check if user exists (simulate)
-    const userExists = Math.random() > 0.5; // 50% chance user exists
+    // Simulate checking if user exists (50% chance user exists for demo)
+    const userExists = Math.random() > 0.5;
     
-    if (userExists && !isRegistering) {
-      // User exists, log them in
+    if (userExists) {
+      // Existing user, log them in
       const userData = {
         id: '1',
         name: 'John Doe',
@@ -76,8 +73,12 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const handleRegister = () => {
     const newErrors: { [key: string]: string } = {};
     
-    if (!name.trim()) newErrors.name = 'Name is required';
-    if (!address.trim()) newErrors.address = 'Address is required';
+    if (!name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    if (!addressLine1.trim()) {
+      newErrors.addressLine1 = 'Address Line 1 is required';
+    }
     if (!pincode.trim()) {
       newErrors.pincode = 'PIN code is required';
     } else if (!validateBangalorePincode(pincode)) {
@@ -89,11 +90,15 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       return;
     }
 
+    const fullAddress = addressLine2.trim() 
+      ? `${addressLine1}, ${addressLine2}` 
+      : addressLine1;
+
     const userData = {
       id: Date.now().toString(),
       name,
       phone,
-      address,
+      address: fullAddress,
       pincode
     };
     
@@ -107,9 +112,9 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     setPhone('');
     setOtp('');
     setName('');
-    setAddress('');
+    setAddressLine1('');
+    setAddressLine2('');
     setPincode('');
-    setIsRegistering(false);
     setErrors({});
   };
 
@@ -120,7 +125,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full">
+      <DialogContent className="max-w-md mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-center">
             {step === 'phone' && 'Login to Continue'}
@@ -155,18 +160,9 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                 {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
               </div>
 
-              <div className="space-y-3">
-                <Button onClick={handleSendOTP} className="w-full">
-                  Send OTP
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => setIsRegistering(true)} 
-                  className="w-full"
-                >
-                  New User? Register
-                </Button>
-              </div>
+              <Button onClick={handleSendOTP} className="w-full bg-gray-700 hover:bg-gray-800">
+                Send OTP
+              </Button>
             </>
           )}
 
@@ -202,7 +198,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
               </div>
 
               <div className="space-y-3">
-                <Button onClick={handleVerifyOTP} className="w-full">
+                <Button onClick={handleVerifyOTP} className="w-full bg-gray-700 hover:bg-gray-800">
                   Verify OTP
                 </Button>
                 <Button variant="ghost" onClick={() => setStep('phone')} className="w-full">
@@ -238,18 +234,28 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
+                  <Label htmlFor="addressLine1">Address Line 1</Label>
                   <Input
-                    id="address"
-                    placeholder="Flat/House No, Society Name, Area"
-                    value={address}
+                    id="addressLine1"
+                    placeholder="Flat/House No, Building Name"
+                    value={addressLine1}
                     onChange={(e) => {
-                      setAddress(e.target.value);
-                      if (errors.address) setErrors(prev => ({ ...prev, address: undefined }));
+                      setAddressLine1(e.target.value);
+                      if (errors.addressLine1) setErrors(prev => ({ ...prev, addressLine1: undefined }));
                     }}
-                    className={cn(errors.address && "border-red-500 focus-visible:ring-red-500")}
+                    className={cn(errors.addressLine1 && "border-red-500 focus-visible:ring-red-500")}
                   />
-                  {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
+                  {errors.addressLine1 && <p className="text-red-500 text-sm">{errors.addressLine1}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="addressLine2">Address Line 2</Label>
+                  <Input
+                    id="addressLine2"
+                    placeholder="Street, Area, Locality (Optional)"
+                    value={addressLine2}
+                    onChange={(e) => setAddressLine2(e.target.value)}
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -268,7 +274,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                 </div>
               </div>
 
-              <Button onClick={handleRegister} className="w-full">
+              <Button onClick={handleRegister} className="w-full bg-gray-700 hover:bg-gray-800">
                 Complete Registration
               </Button>
             </>

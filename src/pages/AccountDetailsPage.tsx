@@ -12,7 +12,7 @@ const AccountDetailsPage = ({ onBack }: AccountDetailsPageProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-4 mb-6">
             <Button 
               variant="ghost" 

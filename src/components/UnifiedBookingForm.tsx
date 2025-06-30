@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ import ConfirmationModal from './ConfirmationModal';
 import LoginPrompt from './LoginPrompt';
 import UserInfoCard from './UserInfoCard';
 import LoginModal from './LoginModal';
+import AccountModal from './AccountModal';
 
 interface FormData {
   wasteTypes: string[];
@@ -33,11 +35,10 @@ interface FormErrors {
 
 interface UnifiedBookingFormProps {
   onBack: () => void;
-  onAccountDetails: () => void;
   defaultTab?: 'ewaste' | 'biomedical';
 }
 
-const UnifiedBookingForm = ({ onBack, onAccountDetails, defaultTab = 'ewaste' }: UnifiedBookingFormProps) => {
+const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFormProps) => {
   const { isAuthenticated, user } = useAuth();
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [formData, setFormData] = useState<FormData>({
@@ -50,6 +51,7 @@ const UnifiedBookingForm = ({ onBack, onAccountDetails, defaultTab = 'ewaste' }:
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [accountModalOpen, setAccountModalOpen] = useState(false);
 
   // If user is not authenticated, show login prompt
   if (!isAuthenticated) {
@@ -161,7 +163,7 @@ const UnifiedBookingForm = ({ onBack, onAccountDetails, defaultTab = 'ewaste' }:
     <>
       <div className="min-h-screen bg-neutral-50">
         <div className="container mx-auto px-4 py-8">
-          <Button variant="ghost" onClick={onBack} className="mb-4 hover:bg-gray-200">
+          <Button variant="ghost" onClick={onBack} className="mb-4">
             ← Back
           </Button>
           
@@ -191,7 +193,7 @@ const UnifiedBookingForm = ({ onBack, onAccountDetails, defaultTab = 'ewaste' }:
                   </Tabs>
 
                   {/* User Info Card moved below tabs */}
-                  <UserInfoCard onEdit={onAccountDetails} />
+                  <UserInfoCard onEdit={() => setAccountModalOpen(true)} />
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
@@ -340,6 +342,11 @@ const UnifiedBookingForm = ({ onBack, onAccountDetails, defaultTab = 'ewaste' }:
       <LoginModal 
         isOpen={loginModalOpen} 
         onClose={() => setLoginModalOpen(false)} 
+      />
+      
+      <AccountModal 
+        isOpen={accountModalOpen} 
+        onClose={() => setAccountModalOpen(false)} 
       />
     </>
   );

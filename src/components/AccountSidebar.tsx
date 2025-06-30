@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { User, Calendar, Clock, LogOut } from 'lucide-react';
@@ -19,20 +19,13 @@ const AccountSidebar = ({
   onPastPickups 
 }: AccountSidebarProps) => {
   const { logout } = useAuth();
-  const [open, setOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
-    setOpen(false);
-  };
-
-  const handleMenuClick = (action: () => void) => {
-    action();
-    setOpen(false);
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet>
       <SheetTrigger asChild>
         {children}
       </SheetTrigger>
@@ -46,8 +39,8 @@ const AccountSidebar = ({
             <div className="space-y-2">
               <Button
                 variant="ghost"
-                className="w-full justify-start h-12 px-4 hover:bg-gray-100"
-                onClick={() => handleMenuClick(onAccountDetails)}
+                className="w-full justify-start h-12 px-4"
+                onClick={onAccountDetails}
               >
                 <User className="w-5 h-5 mr-3" />
                 Account Details
@@ -55,8 +48,8 @@ const AccountSidebar = ({
               
               <Button
                 variant="ghost"
-                className="w-full justify-start h-12 px-4 hover:bg-gray-100"
-                onClick={() => handleMenuClick(onScheduledPickups)}
+                className="w-full justify-start h-12 px-4"
+                onClick={onScheduledPickups}
               >
                 <Calendar className="w-5 h-5 mr-3" />
                 Scheduled Pickups
@@ -64,8 +57,8 @@ const AccountSidebar = ({
               
               <Button
                 variant="ghost"
-                className="w-full justify-start h-12 px-4 hover:bg-gray-100"
-                onClick={() => handleMenuClick(onPastPickups)}
+                className="w-full justify-start h-12 px-4"
+                onClick={onPastPickups}
               >
                 <Clock className="w-5 h-5 mr-3" />
                 Past Pickups
@@ -76,7 +69,7 @@ const AccountSidebar = ({
           <div className="p-4 border-t">
             <Button
               variant="ghost"
-              className="w-full justify-start h-12 px-4 text-red-600 hover:text-red-700 hover:bg-gray-100"
+              className="w-full justify-start h-12 px-4 text-red-600 hover:text-red-700 hover:bg-red-50"
               onClick={handleLogout}
             >
               <LogOut className="w-5 h-5 mr-3" />

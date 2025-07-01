@@ -36,17 +36,11 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   };
 
   const validateIndianPhone = (phone: string): boolean => {
-    return /^(\+91|91)?[6-9]\d{9}$/.test(phone.replace(/\s/g, ''));
+    return /^\d{10}$/.test(phone);
   };
 
   const formatPhoneNumber = (phone: string): string => {
-    const cleaned = phone.replace(/\D/g, '');
-    if (cleaned.startsWith('91')) {
-      return '+91 ' + cleaned.slice(2, 7) + ' ' + cleaned.slice(7);
-    } else if (cleaned.length === 10) {
-      return '+91 ' + cleaned.slice(0, 5) + ' ' + cleaned.slice(5);
-    }
-    return phone;
+    return '+91 ' + phone;
   };
 
   const handleSendOTP = () => {
@@ -102,7 +96,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     if (!phone.trim()) {
       newErrors.phone = 'Phone number is required';
     } else if (!validateIndianPhone(phone)) {
-      newErrors.phone = 'Please enter a valid Indian phone number';
+      newErrors.phone = 'Please enter a valid 10-digit phone number';
     }
     if (!addressLine1.trim()) {
       newErrors.addressLine1 = 'Address Line 1 is required';
@@ -153,19 +147,9 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   };
 
   const handlePhoneChange = (value: string) => {
-    // Only allow numbers and + symbol
-    const cleaned = value.replace(/[^\d+]/g, '');
-    
-    // Auto-add +91 prefix for Indian numbers
-    if (cleaned.length > 0 && !cleaned.startsWith('+91') && !cleaned.startsWith('91')) {
-      if (cleaned.startsWith('+')) {
-        setPhone(cleaned);
-      } else {
-        setPhone('+91 ' + cleaned);
-      }
-    } else {
-      setPhone(cleaned);
-    }
+    // Only allow numbers, max 10 digits
+    const cleaned = value.replace(/\D/g, '').slice(0, 10);
+    setPhone(cleaned);
     
     if (errors.phone) setErrors(prev => ({ ...prev, phone: undefined }));
   };
@@ -282,15 +266,23 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    placeholder="+91 98765 43210"
-                    value={phone}
-                    onChange={(e) => handlePhoneChange(e.target.value)}
-                    className={cn(errors.phone && "border-red-500 focus-visible:ring-red-500")}
-                  />
+                  <div className="flex">
+                    <div className="flex items-center px-3 border border-r-0 rounded-l-md bg-gray-50 text-gray-600 text-sm">
+                      +91
+                    </div>
+                    <Input
+                      id="phone"
+                      placeholder="9876543210"
+                      value={phone}
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      className={cn(
+                        "rounded-l-none border-l-0",
+                        errors.phone && "border-red-500 focus-visible:ring-red-500"
+                      )}
+                      maxLength={10}
+                    />
+                  </div>
                   {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
-                  <p className="text-xs text-gray-500">Only Indian phone numbers are accepted</p>
                 </div>
 
                 <div className="space-y-2">

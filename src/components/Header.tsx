@@ -15,7 +15,7 @@ interface HeaderProps {
 const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user, onLogin, onAccountDetails, onScheduledPickups, onPastPickups } = useAuth();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -68,39 +68,27 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
-                >
-                  {item.label}
-                </button>
-              ))}
-              
+            <nav className="hidden md:flex items-center space-x-8">
+              <a href="#" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-md transition-colors">
+                Learn
+              </a>
+              <a href="#" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-md transition-colors">
+                About
+              </a>
               {isAuthenticated ? (
-                <div className="flex items-center gap-4">
-                  <Button 
-                    className="bg-gray-700 hover:bg-gray-800 text-white"
-                    onClick={() => handleNavClick('schedule-pickup')}
-                  >
-                    Schedule Pickup
+                <AccountSidebar 
+                  onAccountDetails={onAccountDetails}
+                  onScheduledPickups={onScheduledPickups}
+                  onPastPickups={onPastPickups}
+                >
+                  <Button variant="ghost" className="text-gray-700 hover:bg-gray-100">
+                    Hi, {user?.name?.split(' ')[0]}
                   </Button>
-                  <AccountSidebar
-                    onAccountDetails={() => handleAccountNavigation('profile')}
-                    onScheduledPickups={() => handleAccountNavigation('ongoing')}
-                    onPastPickups={() => handleAccountNavigation('history')}
-                  >
-                    <Button variant="outline" size="icon">
-                      <User className="w-4 h-4" />
-                    </Button>
-                  </AccountSidebar>
-                </div>
+                </AccountSidebar>
               ) : (
                 <Button 
-                  className="bg-gray-700 hover:bg-gray-800 text-white"
-                  onClick={() => handleNavClick('login')}
+                  onClick={onLogin}
+                  className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2"
                 >
                   Login
                 </Button>

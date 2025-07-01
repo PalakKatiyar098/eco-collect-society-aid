@@ -23,13 +23,14 @@ import AccountModal from './AccountModal';
 
 interface FormData {
   wasteTypes: string[];
+  quantity: string;
   additionalNotes: string;
   images: File[];
   date?: Date;
 }
 
 interface FormErrors {
-  wasteTypes?: string;
+  quantity?: string;
   date?: string;
 }
 
@@ -43,6 +44,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [formData, setFormData] = useState<FormData>({
     wasteTypes: [],
+    quantity: '',
     additionalNotes: '',
     images: [],
     date: new Date()
@@ -76,13 +78,21 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
     'Other Medical Waste'
   ];
 
+  const quantityOptions = [
+    '1-5 kg',
+    '5-10 kg',
+    '10-25 kg',
+    '25-50 kg',
+    '50+ kg'
+  ];
+
   const wasteOptions = activeTab === 'ewaste' ? ewasteOptions : biomedicalOptions;
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (formData.wasteTypes.length === 0) {
-      newErrors.wasteTypes = 'At least one waste type must be selected';
+    if (!formData.quantity) {
+      newErrors.quantity = 'Please select quantity of waste';
     }
     if (!formData.date) {
       newErrors.date = 'Pickup date is required';
@@ -113,6 +123,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
     setSuccessModalOpen(false);
     setFormData({
       wasteTypes: [],
+      quantity: '',
       additionalNotes: '',
       images: [],
       date: new Date()
@@ -127,8 +138,12 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
         ? prev.wasteTypes.filter(type => type !== wasteType)
         : [...prev.wasteTypes, wasteType]
     }));
-    if (errors.wasteTypes) {
-      setErrors(prev => ({ ...prev, wasteTypes: undefined }));
+  };
+
+  const handleQuantitySelect = (quantity: string) => {
+    setFormData(prev => ({ ...prev, quantity }));
+    if (errors.quantity) {
+      setErrors(prev => ({ ...prev, quantity: undefined }));
     }
   };
 
@@ -163,7 +178,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
     <>
       <div className="min-h-screen bg-neutral-50">
         <div className="container mx-auto px-4 py-8">
-          <Button variant="ghost" onClick={onBack} className="mb-4">
+          <Button variant="ghost" onClick={onBack} className="mb-4 hover:bg-gray-100">
             ← Back
           </Button>
           
@@ -197,32 +212,6 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                      <Label className="block text-sm font-medium text-gray-700 mb-3">
-                        Type of {activeTab === 'ewaste' ? 'E-Waste' : 'Biomedical Waste'} <span className="text-red-500">*</span>
-                      </Label>
-                      <div className="flex flex-wrap gap-2">
-                        {wasteOptions.map((option) => (
-                          <button
-                            key={option}
-                            type="button"
-                            onClick={() => handleWasteTypeToggle(option)}
-                            className={cn(
-                              "px-3 py-2 rounded-full text-sm font-medium border transition-colors",
-                              formData.wasteTypes.includes(option)
-                                ? currentColor === 'blue' 
-                                  ? "bg-blue-100 text-blue-700 border-blue-300" 
-                                  : "bg-green-100 text-green-700 border-green-300"
-                                : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
-                            )}
-                          >
-                            {option}
-                          </button>
-                        ))}
-                      </div>
-                      {errors.wasteTypes && <p className="text-red-500 text-sm mt-1">{errors.wasteTypes}</p>}
-                    </div>
-
-                    <div>
                       <Label htmlFor="date" className="block text-sm font-medium text-gray-700">
                         Preferred Pickup Date <span className="text-red-500">*</span>
                       </Label>
@@ -231,7 +220,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "w-full justify-start text-left font-normal mt-1",
+                              "w-full justify-start text-left font-normal mt-1 hover:bg-gray-100",
                               !formData.date && "text-muted-foreground",
                               errors.date && "border-red-500 focus-visible:ring-red-500"
                             )}
@@ -255,6 +244,57 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                         </PopoverContent>
                       </Popover>
                       {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
+                    </div>
+
+                    <div>
+                      <Label className="block text-sm font-medium text-gray-700 mb-3">
+                        Quantity of Waste <span className="text-red-500">*</span>
+                      </Label>
+                      <div className="flex flex-wrap gap-2">
+                        {quantityOptions.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => handleQuantitySelect(option)}
+                            className={cn(
+                              "px-3 py-2 rounded-full text-sm font-medium border transition-colors",
+                              formData.quantity === option
+                                ? currentColor === 'blue' 
+                                  ? "bg-blue-100 text-blue-700 border-blue-300" 
+                                  : "bg-green-100 text-green-700 border-green-300"
+                                : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
+                            )}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                      {errors.quantity && <p className="text-red-500 text-sm mt-1">{errors.quantity}</p>}
+                    </div>
+
+                    <div>
+                      <Label className="block text-sm font-medium text-gray-700 mb-3">
+                        Type of {activeTab === 'ewaste' ? 'E-Waste' : 'Biomedical Waste'}
+                      </Label>
+                      <div className="flex flex-wrap gap-2">
+                        {wasteOptions.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => handleWasteTypeToggle(option)}
+                            className={cn(
+                              "px-3 py-2 rounded-full text-sm font-medium border transition-colors",
+                              formData.wasteTypes.includes(option)
+                                ? currentColor === 'blue' 
+                                  ? "bg-blue-100 text-blue-700 border-blue-300" 
+                                  : "bg-green-100 text-green-700 border-green-300"
+                                : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
+                            )}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     <div>

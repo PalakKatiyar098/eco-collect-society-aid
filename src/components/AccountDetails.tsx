@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, Phone, MapPin } from 'lucide-react';
+import { User, Phone, MapPin, Mail } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
@@ -12,7 +12,9 @@ const AccountDetails = () => {
   const { user, updateUser } = useAuth();
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
-    address: user?.address || '',
+    email: user?.email || '',
+    addressLine1: user?.address?.split(',')[0]?.trim() || '',
+    addressLine2: user?.address?.split(',').slice(1).join(',').trim() || '',
     pincode: user?.pincode || ''
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -28,7 +30,9 @@ const AccountDetails = () => {
     // Check if there are changes
     const originalValues = {
       name: user?.name || '',
-      address: user?.address || '',
+      email: user?.email || '',
+      addressLine1: user?.address?.split(',')[0]?.trim() || '',
+      addressLine2: user?.address?.split(',').slice(1).join(',').trim() || '',
       pincode: user?.pincode || ''
     };
     
@@ -51,8 +55,8 @@ const AccountDetails = () => {
     if (!editForm.name.trim()) {
       newErrors.name = 'Name is required';
     }
-    if (!editForm.address.trim()) {
-      newErrors.address = 'Address is required';
+    if (!editForm.addressLine1.trim()) {
+      newErrors.addressLine1 = 'Address Line 1 is required';
     }
     if (!editForm.pincode.trim()) {
       newErrors.pincode = 'PIN code is required';
@@ -65,7 +69,15 @@ const AccountDetails = () => {
       return;
     }
 
-    updateUser(editForm);
+    const fullAddress = editForm.addressLine2.trim() 
+      ? `${editForm.addressLine1}, ${editForm.addressLine2}` 
+      : editForm.addressLine1;
+
+    updateUser({
+      name: editForm.name,
+      address: fullAddress,
+      pincode: editForm.pincode
+    });
     setHasChanges(false);
     setErrors({});
   };
@@ -91,6 +103,17 @@ const AccountDetails = () => {
         </div>
 
         <div className="space-y-2">
+          <Label htmlFor="email">Email Address</Label>
+          <Input
+            id="email"
+            value={editForm.email}
+            disabled
+            className="bg-gray-100"
+          />
+          <p className="text-xs text-gray-500">Email address cannot be changed</p>
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="phone">Phone Number</Label>
           <Input
             id="phone"
@@ -102,14 +125,25 @@ const AccountDetails = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="address">Address</Label>
+          <Label htmlFor="addressLine1">Address Line 1</Label>
           <Input
-            id="address"
-            value={editForm.address}
-            onChange={(e) => handleInputChange('address', e.target.value)}
-            className={cn(errors.address && "border-red-500 focus-visible:ring-red-500")}
+            id="addressLine1"
+            placeholder="Flat/House No, Building Name"
+            value={editForm.addressLine1}
+            onChange={(e) => handleInputChange('addressLine1', e.target.value)}
+            className={cn(errors.addressLine1 && "border-red-500 focus-visible:ring-red-500")}
           />
-          {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
+          {errors.addressLine1 && <p className="text-red-500 text-sm">{errors.addressLine1}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="addressLine2">Address Line 2</Label>
+          <Input
+            id="addressLine2"
+            placeholder="Street, Area, Locality (Optional)"
+            value={editForm.addressLine2}
+            onChange={(e) => handleInputChange('addressLine2', e.target.value)}
+          />
         </div>
 
         <div className="space-y-2">

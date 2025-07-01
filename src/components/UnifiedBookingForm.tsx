@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -36,10 +35,11 @@ interface FormErrors {
 
 interface UnifiedBookingFormProps {
   onBack: () => void;
+  onAccountDetails?: () => void;
   defaultTab?: 'ewaste' | 'biomedical';
 }
 
-const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFormProps) => {
+const UnifiedBookingForm = ({ onBack, onAccountDetails, defaultTab = 'ewaste' }: UnifiedBookingFormProps) => {
   const { isAuthenticated, user } = useAuth();
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [formData, setFormData] = useState<FormData>({
@@ -174,6 +174,12 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
     societyName: user?.address || ''
   };
 
+  const handleEditDetails = () => {
+    if (onAccountDetails) {
+      onAccountDetails();
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen bg-neutral-50">
@@ -208,7 +214,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFor
                   </Tabs>
 
                   {/* User Info Card moved below tabs */}
-                  <UserInfoCard onEdit={() => setAccountModalOpen(true)} />
+                  <UserInfoCard onEdit={handleEditDetails} />
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>

@@ -10,7 +10,7 @@ const QuickInfo = () => {
       <div className="space-y-6">
         <div>
           <h4 className="font-medium text-gray-900 mb-1 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-primary" />
+            <Clock className="w-4 h-4 text-gray-500" />
             Pickup Hours
           </h4>
           <p className="text-sm text-gray-600">Monday - Saturday: 9 AM - 7 PM</p>
@@ -19,7 +19,7 @@ const QuickInfo = () => {
         
         <div>
           <h4 className="font-medium text-gray-900 mb-1 flex items-center gap-2">
-            <Users className="w-4 h-4 text-primary" />
+            <Users className="w-4 h-4 text-gray-500" />
             Response Time
           </h4>
           <p className="text-sm text-gray-600">We'll confirm within 24 hours</p>
@@ -27,7 +27,7 @@ const QuickInfo = () => {
         
         <div>
           <h4 className="font-medium text-gray-900 mb-1 flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-primary" />
+            <MapPin className="w-4 h-4 text-gray-500" />
             Service Areas
           </h4>
           <p className="text-sm text-gray-600">Available across major cities</p>
@@ -35,22 +35,22 @@ const QuickInfo = () => {
       </div>
 
       <div className="border-t border-neutral-200 pt-6 mt-6">
-        <h4 className="font-semibold text-primary mb-3">Why Choose Us?</h4>
+        <h4 className="font-semibold text-gray-700 mb-3">Why Choose Us?</h4>
         <ul className="space-y-2 text-sm text-gray-600">
           <li className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-primary rounded-full" />
+            <div className="w-2 h-2 bg-gray-400 rounded-full" />
             Certified waste management
           </li>
           <li className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-primary rounded-full" />
+            <div className="w-2 h-2 bg-gray-400 rounded-full" />
             Doorstep collection
           </li>
           <li className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-primary rounded-full" />
+            <div className="w-2 h-2 bg-gray-400 rounded-full" />
             Environmentally responsible
           </li>
           <li className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-primary rounded-full" />
+            <div className="w-2 h-2 bg-gray-400 rounded-full" />
             Competitive pricing
           </li>
         </ul>

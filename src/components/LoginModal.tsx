@@ -73,6 +73,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       const userData = {
         id: '1',
         name: 'John Doe',
+        email: email,
         phone: '+91 98765 43210',
         address: 'Sample Address, Bangalore',
         pincode: '560001'
@@ -119,6 +120,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     const userData = {
       id: Date.now().toString(),
       name,
+      email: email,
       phone: formatPhoneNumber(phone),
       address: fullAddress,
       pincode

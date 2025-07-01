@@ -94,20 +94,30 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
               >
                 About
               </a>
+              
+              {/* Schedule Pickup CTA */}
+              <Button 
+                onClick={() => onSectionChange('ewaste')}
+                className="bg-primary hover:bg-primary/90 text-white px-6 py-2"
+              >
+                Schedule Pickup
+              </Button>
+              
               {isAuthenticated ? (
                 <AccountSidebar 
                   onAccountDetails={() => handleAccountNavigation('profile')}
                   onScheduledPickups={() => handleAccountNavigation('ongoing')}
                   onPastPickups={() => handleAccountNavigation('history')}
                 >
-                  <Button variant="ghost" className="text-gray-700 hover:bg-gray-100">
-                    Hi, {user?.name?.split(' ')[0]}
+                  <Button variant="ghost" size="sm" className="p-2 hover:bg-gray-100 rounded-full">
+                    <User className="w-5 h-5 text-gray-700" />
                   </Button>
                 </AccountSidebar>
               ) : (
                 <Button 
                   onClick={handleLogin}
-                  className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2"
+                  variant="outline"
+                  className="text-gray-700 border-gray-300 hover:bg-gray-100"
                 >
                   Login
                 </Button>
@@ -144,7 +154,7 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
                 {isAuthenticated ? (
                   <>
                     <Button 
-                      className="mt-2 bg-gray-700 hover:bg-gray-800 text-white"
+                      className="mt-2 bg-primary hover:bg-primary/90 text-white"
                       onClick={() => handleNavClick('schedule-pickup')}
                     >
                       Schedule Pickup

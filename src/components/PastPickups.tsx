@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Clock, FileText, Image } from 'lucide-react';
+import { Calendar, MapPin, Clock, FileText, Image, Scale } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const PastPickups = () => {
@@ -14,6 +14,7 @@ const PastPickups = () => {
       id: '2',
       type: 'Biomedical',
       items: ['Syringes', 'Expired Medications', 'Test Strips'],
+      quantity: '1-5 kg',
       status: 'Completed',
       scheduledDate: '2023-12-18',
       completedDate: '2023-12-20',
@@ -27,6 +28,7 @@ const PastPickups = () => {
       id: '3',
       type: 'E-Waste',
       items: ['Laptop', 'Cables', 'Old Phone'],
+      quantity: '5-10 kg',
       status: 'Completed',
       scheduledDate: '2023-11-08',
       completedDate: '2023-11-10',
@@ -73,6 +75,11 @@ const PastPickups = () => {
                   <p>{pickup.address}</p>
                   <p>PIN: {pickup.pincode}</p>
                 </div>
+              </div>
+              
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Scale className="w-4 h-4" />
+                <span>Quantity: {pickup.quantity}</span>
               </div>
               
               <div className="space-y-2">

@@ -12,7 +12,7 @@ const AccountDetails = () => {
   const { user, updateUser } = useAuth();
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
-    email: user?.email || '',
+    phone: user?.phone || '',
     addressLine1: user?.address?.split(',')[0]?.trim() || '',
     addressLine2: user?.address?.split(',').slice(1).join(',').trim() || '',
     pincode: user?.pincode || ''
@@ -24,13 +24,17 @@ const AccountDetails = () => {
     return /^560\d{3}$/.test(pincode);
   };
 
+  const validatePhone = (phone: string): boolean => {
+    return /^\d{10}$/.test(phone);
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setEditForm(prev => ({ ...prev, [field]: value }));
     
     // Check if there are changes
     const originalValues = {
       name: user?.name || '',
-      email: user?.email || '',
+      phone: user?.phone || '',
       addressLine1: user?.address?.split(',')[0]?.trim() || '',
       addressLine2: user?.address?.split(',').slice(1).join(',').trim() || '',
       pincode: user?.pincode || ''
@@ -55,6 +59,11 @@ const AccountDetails = () => {
     if (!editForm.name.trim()) {
       newErrors.name = 'Name is required';
     }
+    if (!editForm.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!validatePhone(editForm.phone)) {
+      newErrors.phone = 'Please enter a valid 10-digit phone number';
+    }
     if (!editForm.addressLine1.trim()) {
       newErrors.addressLine1 = 'Address Line 1 is required';
     }
@@ -75,6 +84,7 @@ const AccountDetails = () => {
 
     updateUser({
       name: editForm.name,
+      phone: editForm.phone,
       address: fullAddress,
       pincode: editForm.pincode
     });
@@ -104,24 +114,30 @@ const AccountDetails = () => {
 
         <div className="space-y-2">
           <Label htmlFor="email">Email Address</Label>
-          <Input
-            id="email"
-            value={editForm.email}
-            disabled
-            className="bg-gray-100"
-          />
+          <div className="flex items-center gap-2">
+            <Mail className="w-4 h-4 text-gray-500" />
+            <span className="text-sm text-gray-600">{user?.email}</span>
+          </div>
           <p className="text-xs text-gray-500">Email address cannot be changed</p>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="phone">Phone Number</Label>
-          <Input
-            id="phone"
-            value={user?.phone || ''}
-            disabled
-            className="bg-gray-100"
-          />
-          <p className="text-xs text-gray-500">Phone number cannot be changed</p>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 bg-gray-100 px-3 py-2 rounded-l-md border border-r-0">+91</span>
+            <Input
+              id="phone"
+              value={editForm.phone}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              placeholder="Enter 10-digit phone number"
+              maxLength={10}
+              className={cn(
+                "rounded-l-none",
+                errors.phone && "border-red-500 focus-visible:ring-red-500"
+              )}
+            />
+          </div>
+          {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
         </div>
 
         <div className="space-y-2">

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Building, Shield, Award } from 'lucide-react';
+import { Building, Shield, Award, Recycle } from 'lucide-react';
 
 const TrustedPartners = () => {
   const partners = [
@@ -43,8 +43,26 @@ const TrustedPartners = () => {
     }
   ];
 
+  const features = [
+    'Certified',
+    'Secure', 
+    'Sustainable'
+  ];
+
   return (
     <div className="bg-white">
+      {/* Hero Features */}
+      <div className="text-center mb-8">
+        <div className="flex justify-center items-center gap-6 mb-6">
+          {features.map((feature, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Recycle className="w-4 h-4 text-green-600" />
+              <span className="text-sm font-medium text-gray-700">{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Trusted Partners</h2>
         <p className="text-gray-600 max-w-2xl mx-auto">

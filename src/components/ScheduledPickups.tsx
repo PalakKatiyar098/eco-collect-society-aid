@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Package, FileText, Image } from 'lucide-react';
+import { Calendar, MapPin, Package, FileText, Image, Scale } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const ScheduledPickups = () => {
@@ -14,6 +14,7 @@ const ScheduledPickups = () => {
       id: '1',
       type: 'E-Waste',
       items: ['Mobile Phones', 'Batteries', 'Cables'],
+      quantity: '10-25 kg',
       status: 'Scheduled',
       scheduledDate: '2024-01-15',
       pickupDate: '2024-01-17',
@@ -63,6 +64,11 @@ const ScheduledPickups = () => {
                   <p>{pickup.address}</p>
                   <p>PIN: {pickup.pincode}</p>
                 </div>
+              </div>
+              
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Scale className="w-4 h-4" />
+                <span>Quantity: {pickup.quantity}</span>
               </div>
               
               <div className="space-y-2">

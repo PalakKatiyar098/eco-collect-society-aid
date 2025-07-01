@@ -95,13 +95,15 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
                 About
               </a>
               
-              {/* Schedule Pickup CTA */}
-              <Button 
-                onClick={() => onSectionChange('ewaste')}
-                className="bg-primary hover:bg-primary/90 text-white px-6 py-2"
-              >
-                Schedule Pickup
-              </Button>
+              {/* Schedule Pickup CTA - only show when authenticated */}
+              {isAuthenticated && (
+                <Button 
+                  onClick={() => onSectionChange('ewaste')}
+                  className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2"
+                >
+                  Schedule Pickup
+                </Button>
+              )}
               
               {isAuthenticated ? (
                 <AccountSidebar 
@@ -154,7 +156,7 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
                 {isAuthenticated ? (
                   <>
                     <Button 
-                      className="mt-2 bg-primary hover:bg-primary/90 text-white"
+                      className="mt-2 bg-gray-700 hover:bg-gray-800 text-white"
                       onClick={() => handleNavClick('schedule-pickup')}
                     >
                       Schedule Pickup

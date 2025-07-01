@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Recycle, Menu, X, User } from 'lucide-react';
@@ -15,7 +16,7 @@ interface HeaderProps {
 const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const { isAuthenticated, user, onLogin, onAccountDetails, onScheduledPickups, onPastPickups } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -35,6 +36,10 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
       setIsLoginModalOpen(true);
     }
     setIsMobileMenuOpen(false);
+  };
+
+  const handleLogin = () => {
+    setIsLoginModalOpen(true);
   };
 
   const handleAccountNavigation = (view: 'profile' | 'ongoing' | 'history') => {
@@ -69,17 +74,31 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-md transition-colors">
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection('education-section');
+                }}
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-md transition-colors"
+              >
                 Learn
               </a>
-              <a href="#" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-md transition-colors">
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection('about-section');
+                }}
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-md transition-colors"
+              >
                 About
               </a>
               {isAuthenticated ? (
                 <AccountSidebar 
-                  onAccountDetails={onAccountDetails}
-                  onScheduledPickups={onScheduledPickups}
-                  onPastPickups={onPastPickups}
+                  onAccountDetails={() => handleAccountNavigation('profile')}
+                  onScheduledPickups={() => handleAccountNavigation('ongoing')}
+                  onPastPickups={() => handleAccountNavigation('history')}
                 >
                   <Button variant="ghost" className="text-gray-700 hover:bg-gray-100">
                     Hi, {user?.name?.split(' ')[0]}
@@ -87,7 +106,7 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
                 </AccountSidebar>
               ) : (
                 <Button 
-                  onClick={onLogin}
+                  onClick={handleLogin}
                   className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2"
                 >
                   Login
@@ -116,7 +135,7 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item.id)}
-                    className="px-4 py-3 rounded-lg text-left font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
+                    className="px-4 py-3 rounded-lg text-left font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-gray-100"
                   >
                     {item.label}
                   </button>

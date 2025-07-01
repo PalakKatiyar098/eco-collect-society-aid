@@ -23,8 +23,12 @@ const AccountDetailsPage = ({ onBack }: AccountDetailsPageProps) => {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
+          </div>
+          
+          <div className="text-left mb-8">
             <h1 className="text-2xl font-bold text-gray-900">Account Details</h1>
           </div>
+          
           <AccountDetails />
         </div>
       </div>

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
-import { Phone, User, MapPin } from 'lucide-react';
+import { Mail, User, MapPin, Phone } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
@@ -13,13 +13,14 @@ interface LoginModalProps {
   onClose: () => void;
 }
 
-type Step = 'phone' | 'otp' | 'register';
+type Step = 'email' | 'otp' | 'register';
 
 const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
-  const [step, setStep] = useState<Step>('phone');
-  const [phone, setPhone] = useState('');
+  const [step, setStep] = useState<Step>('email');
+  const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [addressLine1, setAddressLine1] = useState('');
   const [addressLine2, setAddressLine2] = useState('');
   const [pincode, setPincode] = useState('');
@@ -30,12 +31,34 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     return /^560\d{3}$/.test(pincode);
   };
 
+  const validateEmail = (email: string): boolean => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validateIndianPhone = (phone: string): boolean => {
+    return /^(\+91|91)?[6-9]\d{9}$/.test(phone.replace(/\s/g, ''));
+  };
+
+  const formatPhoneNumber = (phone: string): string => {
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.startsWith('91')) {
+      return '+91 ' + cleaned.slice(2, 7) + ' ' + cleaned.slice(7);
+    } else if (cleaned.length === 10) {
+      return '+91 ' + cleaned.slice(0, 5) + ' ' + cleaned.slice(5);
+    }
+    return phone;
+  };
+
   const handleSendOTP = () => {
-    if (!phone.trim()) {
-      setErrors({ phone: 'Phone number is required' });
+    if (!email.trim()) {
+      setErrors({ email: 'Email address is required' });
       return;
     }
-    console.log('Sending OTP to:', phone);
+    if (!validateEmail(email)) {
+      setErrors({ email: 'Please enter a valid email address' });
+      return;
+    }
+    console.log('Sending OTP to:', email);
     setStep('otp');
     setErrors({});
   };
@@ -56,7 +79,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       const userData = {
         id: '1',
         name: 'John Doe',
-        phone: phone,
+        phone: '+91 98765 43210',
         address: 'Sample Address, Bangalore',
         pincode: '560001'
       };
@@ -75,6 +98,11 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     
     if (!name.trim()) {
       newErrors.name = 'Name is required';
+    }
+    if (!phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!validateIndianPhone(phone)) {
+      newErrors.phone = 'Please enter a valid Indian phone number';
     }
     if (!addressLine1.trim()) {
       newErrors.addressLine1 = 'Address Line 1 is required';
@@ -97,7 +125,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     const userData = {
       id: Date.now().toString(),
       name,
-      phone,
+      phone: formatPhoneNumber(phone),
       address: fullAddress,
       pincode
     };
@@ -108,10 +136,11 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   };
 
   const resetForm = () => {
-    setStep('phone');
-    setPhone('');
+    setStep('email');
+    setEmail('');
     setOtp('');
     setName('');
+    setPhone('');
     setAddressLine1('');
     setAddressLine2('');
     setPincode('');
@@ -123,41 +152,59 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     onClose();
   };
 
+  const handlePhoneChange = (value: string) => {
+    // Only allow numbers and + symbol
+    const cleaned = value.replace(/[^\d+]/g, '');
+    
+    // Auto-add +91 prefix for Indian numbers
+    if (cleaned.length > 0 && !cleaned.startsWith('+91') && !cleaned.startsWith('91')) {
+      if (cleaned.startsWith('+')) {
+        setPhone(cleaned);
+      } else {
+        setPhone('+91 ' + cleaned);
+      }
+    } else {
+      setPhone(cleaned);
+    }
+    
+    if (errors.phone) setErrors(prev => ({ ...prev, phone: undefined }));
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-md mx-4 sm:mx-auto w-[calc(100vw-2rem)] sm:w-full rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-center">
-            {step === 'phone' && 'Login to Continue'}
+            {step === 'email' && 'Login to Continue'}
             {step === 'otp' && 'Verify OTP'}
             {step === 'register' && 'Complete Registration'}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {step === 'phone' && (
+          {step === 'email' && (
             <>
               <div className="text-center">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Phone className="w-8 h-8 text-primary" />
+                  <Mail className="w-8 h-8 text-primary" />
                 </div>
-                <p className="text-gray-600">Enter your mobile number to continue</p>
+                <p className="text-gray-600">Enter your email address to continue</p>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="phone">Mobile Number</Label>
+                <Label htmlFor="email">Email Address</Label>
                 <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="+91 9876543210"
-                  value={phone}
+                  id="email"
+                  type="email"
+                  placeholder="example@gmail.com"
+                  value={email}
                   onChange={(e) => {
-                    setPhone(e.target.value);
-                    if (errors.phone) setErrors(prev => ({ ...prev, phone: undefined }));
+                    setEmail(e.target.value);
+                    if (errors.email) setErrors(prev => ({ ...prev, email: undefined }));
                   }}
-                  className={cn(errors.phone && "border-red-500 focus-visible:ring-red-500")}
+                  className={cn(errors.email && "border-red-500 focus-visible:ring-red-500")}
                 />
-                {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
               </div>
 
               <Button onClick={handleSendOTP} className="w-full bg-gray-700 hover:bg-gray-800">
@@ -170,7 +217,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
             <>
               <div className="text-center">
                 <p className="text-gray-600">Enter the 6-digit OTP sent to</p>
-                <p className="font-medium">{phone}</p>
+                <p className="font-medium">{email}</p>
               </div>
               
               <div className="space-y-2">
@@ -201,8 +248,8 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                 <Button onClick={handleVerifyOTP} className="w-full bg-gray-700 hover:bg-gray-800">
                   Verify OTP
                 </Button>
-                <Button variant="ghost" onClick={() => setStep('phone')} className="w-full">
-                  Change Number
+                <Button variant="ghost" onClick={() => setStep('email')} className="w-full hover:bg-gray-100">
+                  Change Email
                 </Button>
               </div>
             </>
@@ -231,6 +278,19 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
                     className={cn(errors.name && "border-red-500 focus-visible:ring-red-500")}
                   />
                   {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    placeholder="+91 98765 43210"
+                    value={phone}
+                    onChange={(e) => handlePhoneChange(e.target.value)}
+                    className={cn(errors.phone && "border-red-500 focus-visible:ring-red-500")}
+                  />
+                  {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+                  <p className="text-xs text-gray-500">Only Indian phone numbers are accepted</p>
                 </div>
 
                 <div className="space-y-2">

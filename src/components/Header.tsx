@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Recycle, Menu, X, User } from 'lucide-react';
@@ -73,7 +74,7 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
+                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                 >
                   {item.label}
                 </button>
@@ -92,7 +93,7 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
                     onScheduledPickups={() => handleAccountNavigation('ongoing')}
                     onPastPickups={() => handleAccountNavigation('history')}
                   >
-                    <Button variant="outline" size="icon">
+                    <Button variant="outline" size="icon" className="hover:bg-gray-100">
                       <User className="w-4 h-4" />
                     </Button>
                   </AccountSidebar>
@@ -128,7 +129,7 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item.id)}
-                    className="px-4 py-3 rounded-lg text-left font-medium transition-all duration-200 text-gray-600 hover:text-primary hover:bg-primary/5"
+                    className="px-4 py-3 rounded-lg text-left font-medium transition-all duration-200 text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                   >
                     {item.label}
                   </button>
@@ -147,7 +148,7 @@ const Header = ({ activeSection, onSectionChange, onAccountNavigation }: HeaderP
                       onScheduledPickups={() => handleAccountNavigation('ongoing')}
                       onPastPickups={() => handleAccountNavigation('history')}
                     >
-                      <Button variant="outline" className="mt-2 w-full">
+                      <Button variant="outline" className="mt-2 w-full hover:bg-gray-100">
                         <User className="w-4 h-4 mr-2" />
                         My Account
                       </Button>

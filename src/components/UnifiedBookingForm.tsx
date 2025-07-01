@@ -19,6 +19,7 @@ import ConfirmationModal from './ConfirmationModal';
 import LoginPrompt from './LoginPrompt';
 import UserInfoCard from './UserInfoCard';
 import LoginModal from './LoginModal';
+import AccountModal from './AccountModal';
 
 interface FormData {
   wasteTypes: string[];
@@ -35,10 +36,9 @@ interface FormErrors {
 interface UnifiedBookingFormProps {
   onBack: () => void;
   defaultTab?: 'ewaste' | 'biomedical';
-  onAccountDetails: () => void;
 }
 
-const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste', onAccountDetails }: UnifiedBookingFormProps) => {
+const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste' }: UnifiedBookingFormProps) => {
   const { isAuthenticated, user } = useAuth();
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [formData, setFormData] = useState<FormData>({
@@ -51,6 +51,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste', onAccountDetails }:
   const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [accountModalOpen, setAccountModalOpen] = useState(false);
 
   // If user is not authenticated, show login prompt
   if (!isAuthenticated) {
@@ -162,7 +163,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste', onAccountDetails }:
     <>
       <div className="min-h-screen bg-neutral-50">
         <div className="container mx-auto px-4 py-8">
-          <Button variant="ghost" onClick={onBack} className="mb-4 hover:bg-gray-100">
+          <Button variant="ghost" onClick={onBack} className="mb-4">
             ← Back
           </Button>
           
@@ -179,18 +180,12 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste', onAccountDetails }:
               <Card className="bg-white border-0 shadow-sm">
                 <CardContent className="p-8">
                   <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full mb-6">
-                    <TabsList className="grid w-full grid-cols-2 mb-6 h-12 bg-muted">
-                      <TabsTrigger 
-                        value="ewaste" 
-                        className="flex items-center gap-2 text-base py-3 data-[state=active]:bg-gray-700 data-[state=active]:text-white"
-                      >
+                    <TabsList className="grid w-full grid-cols-2 mb-6">
+                      <TabsTrigger value="ewaste" className="flex items-center gap-2">
                         <Recycle className="w-4 h-4" />
                         E-Waste
                       </TabsTrigger>
-                      <TabsTrigger 
-                        value="biomedical" 
-                        className="flex items-center gap-2 text-base py-3 data-[state=active]:bg-gray-700 data-[state=active]:text-white"
-                      >
+                      <TabsTrigger value="biomedical" className="flex items-center gap-2">
                         <Syringe className="w-4 h-4" />
                         Biomedical
                       </TabsTrigger>
@@ -198,7 +193,7 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste', onAccountDetails }:
                   </Tabs>
 
                   {/* User Info Card moved below tabs */}
-                  <UserInfoCard onEdit={onAccountDetails} />
+                  <UserInfoCard onEdit={() => setAccountModalOpen(true)} />
 
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
@@ -347,6 +342,11 @@ const UnifiedBookingForm = ({ onBack, defaultTab = 'ewaste', onAccountDetails }:
       <LoginModal 
         isOpen={loginModalOpen} 
         onClose={() => setLoginModalOpen(false)} 
+      />
+      
+      <AccountModal 
+        isOpen={accountModalOpen} 
+        onClose={() => setAccountModalOpen(false)} 
       />
     </>
   );

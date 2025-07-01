@@ -2,13 +2,8 @@
 import React from 'react';
 import UnifiedBookingForm from './UnifiedBookingForm';
 
-interface BiomedicalBookingProps {
-  onBack: () => void;
-  onAccountDetails: () => void;
-}
-
-const BiomedicalBooking = ({ onBack, onAccountDetails }: BiomedicalBookingProps) => {
-  return <UnifiedBookingForm onBack={onBack} defaultTab="biomedical" onAccountDetails={onAccountDetails} />;
+const BiomedicalBooking = ({ onBack }: { onBack: () => void }) => {
+  return <UnifiedBookingForm onBack={onBack} defaultTab="biomedical" />;
 };
 
 export default BiomedicalBooking;
